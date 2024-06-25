@@ -33,19 +33,27 @@
           <h1 class="title-dialog">Title Dialog</h1>
           <i class="bi bi-info-circle"></i>
         </div>
-        <hr>
+        <hr />
         <h4 class="aviso">Text Content</h4>
-        <hr>
-        <button class="close-dialog"><i class="bi bi-exclamation"></i> Estou Ciente dos riscos e Continuar</button>
+        <hr />
+        <button class="close-dialog">
+          <i class="bi bi-exclamation"></i> Estou Ciente dos riscos e Continuar
+        </button>
       </div>
       <div class="dialog-infor new-d">
         <div class="header-dialog">
           <h1 class="title-dialog">Salvar a senha</h1>
           <i class="bi bi-shield-fill"></i>
         </div>
-        <hr>
-        <input type="text" id="name-app" placeholder="Nome do App" required maxlength="15">
-        <hr>
+        <hr />
+        <input
+          type="text"
+          id="name-app"
+          placeholder="Nome do App"
+          required
+          maxlength="15"
+        />
+        <hr />
         <button class="next-dialog">Criar Senha</button>
       </div>
     </div>
@@ -55,10 +63,12 @@
           <h1 class="title-dialog">Receber senhas salvas</h1>
           <i class="bi bi-shield-fill"></i>
         </div>
-        <hr>
-        <input type="text" id="email-user" placeholder="Seu email: " required>
-        <hr>
-        <button class="send-email"><i class="bi bi-person-fill-down"></i> Solicitar Senhas</button>
+        <hr />
+        <input type="text" id="email-user" placeholder="Seu email: " required />
+        <hr />
+        <button class="send-email">
+          <i class="bi bi-person-fill-down"></i> Solicitar Senhas
+        </button>
       </div>
     </div>
     <div class="back-dialog-clear">
@@ -67,30 +77,53 @@
           <h1 class="title-dialog">Remover os dados do navegador</h1>
           <i class="bi bi-info-circle"></i>
         </div>
-        <hr>
-        <h4 class="aviso">Ao clicar no botão abaixo, você irá remover todas as senhas do navegador, e não poderá recuperá-las ao menos que você tenha solicitado elas por email. Você pode reconsiderar e cancelar a solicitação. Obrigado por usar o NPASS!</h4>
-        <hr>
-        <button class="confirm-dialog-clear-cache d-clearcache"><i class="bi bi-exclamation"></i> Estou Ciente dos Riscos</button>
-        <button class="close-dialog-clear-cache d-clearcache"><i class="bi bi-x"></i> Cancelar a ação</button>
+        <hr />
+        <h4 class="aviso">
+          Ao clicar no botão abaixo, você irá remover todas as senhas do
+          navegador, e não poderá recuperá-las ao menos que você tenha
+          solicitado elas por email. Você pode reconsiderar e cancelar a
+          solicitação. Obrigado por usar o NPASS!
+        </h4>
+        <hr />
+        <button class="confirm-dialog-clear-cache d-clearcache">
+          <i class="bi bi-exclamation"></i> Estou Ciente dos Riscos
+        </button>
+        <button class="close-dialog-clear-cache d-clearcache">
+          <i class="bi bi-x"></i> Cancelar a ação
+        </button>
       </div>
     </div>
     <header>
-      <img
-        src="/src/img/transparent-logo.png"
-        alt="logo-npass"
-        class="logo-npass"
-      />
-      <h1 class="title-site">NPASS</h1>
+      <div class="site-area-name">
+        <img
+          src="/src/img/transparent-logo.png"
+          alt="logo-npass"
+          class="logo-npass"
+        />
+        <h1 class="title-site">NPASS</h1>
+      </div>
       <ul class="services-area">
-        <li><button class="receber-senhas"><i class="bi bi-cloud-upload"></i> Receba suas senhas</button></li>
-        <li><button class="clear-cache"><i class="bi bi-trash"></i> Limpar Senhas</button></li>
+        <li>
+          <button class="receber-senhas fr">
+            <i class="bi bi-cloud-upload"></i> Receba suas senhas
+          </button>
+        </li>
+        <li>
+          <button class="clear-cache fr">
+            <i class="bi bi-trash"></i> Limpar Senhas
+          </button>
+        </li>
         <li><a href="#">Sobre</a></li>
       </ul>
     </header>
     <main>
       <section class="generatePassSection">
         <div class="header-section">
-          <img class="logo-npass" src="/src/img/transparent-logo.png" alt="logo-npass">
+          <img
+            class="logo-npass"
+            src="/src/img/transparent-logo.png"
+            alt="logo-npass"
+          />
           <h1 class="title-page">Generate Pass</h1>
         </div>
         <hr />
@@ -111,7 +144,12 @@
         <hr />
         <div class="settings-normal mode-content">
           <h6 class="require">Opcional</h6>
-          <input type="text" placeholder="Insira seu nome" maxlength="20" id="name-user" />
+          <input
+            type="text"
+            placeholder="Insira seu nome"
+            maxlength="20"
+            id="name-user"
+          />
           <br />
           <h6 class="require true">Obrigatório</h6>
           <input
@@ -148,11 +186,16 @@
             </div>
           </div>
           <hr />
-          <button class="save generatepassbtn"><i class="bi bi-node-plus"></i> Gerar Senha</button>
-          <button class="save savepassbtn"><i class="bi bi-node-plus-fill"></i> Gerar Senha E Salvar no Navegador</button>
+          <button class="save generatepassbtn">
+            <i class="bi bi-node-plus"></i> Gerar Senha
+          </button>
+          <button class="save savepassbtn">
+            <i class="bi bi-node-plus-fill"></i> Gerar Senha E Salvar no
+            Navegador
+          </button>
           <div class="output">
             <h1 class="text-output"></h1>
-            <h4 id="hidden-password-input" style="display: none;"></h4>
+            <h4 id="hidden-password-input" style="display: none"></h4>
             <i class="bi bi-clipboard"></i>
           </div>
         </div>

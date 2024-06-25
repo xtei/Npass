@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NPASS</title>
+    <link rel="stylesheet" href="src/css/index.css" />
+    <link rel="stylesheet" href="src/css/responsive.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+  </head>
+  <body>
+    <div class="back-toast">
+      <div class="toast-container">
+        <h1 class="text-toast">TextToast</h1>
+      </div>
+    </div>
+    <div class="back-dialog-infor">
+      <div class="dialog-infor aviso-d">
+        <div class="header-dialog">
+          <h1 class="title-dialog">Title Dialog</h1>
+          <i class="bi bi-info-circle"></i>
+        </div>
+        <hr>
+        <h4 class="aviso">Text Content</h4>
+        <hr>
+        <button class="close-dialog">Estou Ciente dos riscos e Continuar</button>
+      </div>
+      <div class="dialog-infor new-d">
+        <div class="header-dialog">
+          <h1 class="title-dialog">Salvar a senha</h1>
+          <i class="bi bi-shield-fill"></i>
+        </div>
+        <hr>
+        <input type="text" id="name-app" placeholder="Nome do App" required maxlength="15">
+        <hr>
+        <button class="next-dialog">Criar Senha</button>
+      </div>
+    </div>
+    <div class="back-setemailuser">
+      <div class="set-email">
+        <div class="header-dialog">
+          <h1 class="title-dialog">Receber senhas salvas</h1>
+          <i class="bi bi-shield-fill"></i>
+        </div>
+        <hr>
+        <input type="text" id="email-user" placeholder="Seu email: " required>
+        <hr>
+        <button class="send-email">Solicitar Senhas</button>
+      </div>
+    </div>
+    <div class="back-dialog-clear">
+      <div class="dialog-clear-cache">
+        <div class="header-dialog">
+          <h1 class="title-dialog">Remover os dados do navegador</h1>
+          <i class="bi bi-info-circle"></i>
+        </div>
+        <hr>
+        <h4 class="aviso">Ao clicar no botão abaixo, você irá remover todas as senhas do navegador, e não poderá recuperá-las ao menos que você tenha solicitado elas por email. Você pode reconsiderar e cancelar a solicitação. Obrigado por usar o NPASS!</h4>
+        <hr>
+        <button class="confirm-dialog-clear-cache d-clearcache">Estou Ciente dos riscos e Continuar</button>
+        <button class="close-dialog-clear-cache d-clearcache">Cancelar a ação</button>
+      </div>
+    </div>
+    <header>
+      <img
+        src="/src/img/transparent-logo.png"
+        alt="logo-npass"
+        class="logo-npass"
+      />
+      <h1 class="title-site">NPASS</h1>
+      <ul class="services-area">
+        <li><button class="receber-senhas">Receba suas senhas</button></li>
+        <li><button class="clear-cache">Limpar Senhas</button></li>
+        <li><a href="#">Sobre</a></li>
+      </ul>
+    </header>
+    <main>
+      <section class="generatePassSection">
+        <h1 class="title-page">Generate Pass</h1>
+        <hr />
+        <h4 class="description">
+          Personalize sua senha do seu jeito, adicione configurações avançadas
+          se quiser
+        </h4>
+        <div class="container-settings-pass">
+          <button class="settings-normal btn-setting-mode active">
+            Configurações Normais
+          </button>
+          <button class="settings-advanced btn-setting-mode">
+            Configurações Avançadas
+          </button>
+        </div>
+        <hr />
+        <div class="settings-normal mode-content">
+          <h6 class="require">Opcional</h6>
+          <input type="text" placeholder="Insira seu nome" maxlength="20" id="name-user" />
+          <br />
+          <h6 class="require true">Obrigatório</h6>
+          <input
+            id="length-pass"
+            required
+            type="number"
+            placeholder="Insira o numero de caracteres desejado"
+          />
+          <div class="advanced-content">
+            <hr />
+            <h6 class="require">Configurações Opcionais</h6>
+            <h1 class="title-advanced-op">Opções avançadas</h1>
+            <input type="date" placeholder="Insira sua data de nascimento" />
+            <div class="option-advanced">
+              <input type="checkbox" class="chk" id="chk1" />
+              <label for="chk1" class="switch" id="switch1">
+                <span class="slider" id="slider1"></span>
+              </label>
+              <h4>Ativar caracteres especiais</h4>
+            </div>
+            <div class="option-advanced">
+              <input type="checkbox" class="chk" id="chk2" />
+              <label for="chk2" class="switch" id="switch2">
+                <span class="slider" id="slider2"></span>
+              </label>
+              <h4>Ativar Numeros Aleatórios</h4>
+            </div>
+            <div class="option-advanced">
+              <input type="checkbox" class="chk" id="chk3" />
+              <label for="chk3" class="switch" id="switch3">
+                <span class="slider" id="slider3"></span>
+              </label>
+              <h4>Ativar Letras Minúsculas e Maiúsculas</h4>
+            </div>
+          </div>
+          <hr />
+          <button class="save generatepassbtn">Gerar Senha</button>
+          <button class="save savepassbtn">Gerar Senha E Salvar no Navegador</button>
+          <div class="output">
+            <h1 class="text-output"></h1>
+            <h4 id="hidden-password-input" style="display: none;"></h4>
+            <i class="bi bi-clipboard"></i>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="src/index.js"></script>
+  </body>
+</html>

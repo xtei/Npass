@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const baseurl = 'https://app-npass.vercel.app/send-email';
   function toast(message) {
     const toastBack = document.querySelector(".back-toast");
     const textToast = document.querySelector(".text-toast");
@@ -42,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function sendEmailWithPasswords(email, passwords) {
-    fetch("http://localhost:5000/send-email", {
+    fetch(baseurl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

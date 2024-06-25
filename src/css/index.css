@@ -76,6 +76,7 @@ header ul li a:hover {
 
 button {
   border: 1px solid #300962;
+  padding-left: 7px;
   max-width: 250px;
   height: 40px;
   margin-left: 10px;
@@ -100,6 +101,10 @@ main {
   justify-content: center;
 }
 
+.send-email {
+  width: 100%;
+}
+
 .generatePassSection {
   color: #ffffff;
   max-width: 400px;
@@ -107,6 +112,12 @@ main {
   padding: 15px 15px;
   border-radius: 10px;
   backdrop-filter: blur(20px);
+}
+
+.header-section {
+  display: flex;
+  align-items: center;
+
 }
 
 .generatePassSection .title-page {
@@ -276,8 +287,16 @@ hr {
 }
 
 .save {
-  width: 100%;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  width: 400px;
+  padding: 0 10px;
   margin: 10px 0;
+}
+
+.save i {
+  margin-right: 10px;
 }
 
 .back-toast {
@@ -407,7 +426,7 @@ hr {
   margin: 10px 0 0 0;
 }
 
-.confirm-dialog-clear-cache, .clear-cache {
-  background: red;
-  color: #fff;
+.confirm-dialog-clear-cache, .clear-cache, .close-dialog {
+  border: 1px solid red;
+  color: #ff0000;
 }

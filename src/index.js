@@ -216,9 +216,9 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    if (length > 15) {
+    if (length > 25) {
       toast(
-        "Número máximo de caracteres atingido! Use menor do que 15 e maior do que 8!"
+        "Número máximo de caracteres atingido! Use menor do que 25 e maior do que 8!"
       );
       return;
     }

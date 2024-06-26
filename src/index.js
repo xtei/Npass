@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const baseurl = 'https://app-npass.vercel.app/send-email';
+  const baseurl = "https://app-npass.vercel.app/send-email";
   function toast(message) {
     const toastBack = document.querySelector(".back-toast");
     const textToast = document.querySelector(".text-toast");
@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 3000);
     return;
   }
-  
+
   const showDialogToGetPasswordsBtn = document.querySelector(".receber-senhas");
   const dialogSetEmail = document.querySelector(".back-setemailuser");
   const sendEmailBtn = document.querySelector(".send-email");
@@ -41,14 +41,56 @@ document.addEventListener("DOMContentLoaded", () => {
       toast("Email Inválido");
     }
   });
+  async function decryptPassword(encryptedData) {
+    const { iv, encrypted } = encryptedData;
+    const key = await getKey();
+    const decrypted = await crypto.subtle.decrypt(
+      { name: "AES-GCM", iv: new Uint8Array(iv) },
+      key,
+      new Uint8Array(encrypted)
+    );
+    return new TextDecoder().decode(decrypted);
+  }
+  
+  async function getKey() {
+    const keyMaterial = await crypto.subtle.importKey(
+      "raw",
+      new TextEncoder().encode("some-unique-password"),
+      { name: "PBKDF2" },
+      false,
+      ["deriveKey"]
+    );
 
-  function sendEmailWithPasswords(email, passwords) {
+    const key = await crypto.subtle.deriveKey(
+      {
+        name: "PBKDF2",
+        salt: new TextEncoder().encode("some-salt"),
+        iterations: 100000,
+        hash: "SHA-256",
+      },
+      keyMaterial,
+      { name: "AES-GCM", length: 256 },
+      true,
+      ["encrypt", "decrypt"]
+    );
+
+    return key;
+  }
+
+  async function sendEmailWithPasswords(email, passwords) {
+    const decryptedPasswords = await Promise.all(
+      passwords.map(async (passwordData) => {
+        const decryptedPassword = await decryptPassword(passwordData.password);
+        return { ...passwordData, password: decryptedPassword };
+      })
+    );
+
     fetch(baseurl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, passwords }),
+      body: JSON.stringify({ email, passwords: decryptedPasswords }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -64,13 +106,13 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
-  const showClearLocal = document.querySelector('.clear-cache');
-  const dialogClearCache = document.querySelector('.back-dialog-clear');
-  
+  const showClearLocal = document.querySelector(".clear-cache");
+  const dialogClearCache = document.querySelector(".back-dialog-clear");
+
   showClearLocal.addEventListener("click", () => {
-    dialogClearCache.classList.add('active');
-  })
-  const btnClearCache = document.querySelector('.confirm-dialog-clear-cache');
+    dialogClearCache.classList.add("active");
+  });
+  const btnClearCache = document.querySelector(".confirm-dialog-clear-cache");
 
   const btnCancel = document.querySelector(".close-dialog-clear-cache");
 
@@ -79,18 +121,20 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   btnClearCache.addEventListener("click", () => {
-    dialogClearCache.classList.remove('active')
+    dialogClearCache.classList.remove("active");
     localStorage.clear();
-    toast('Dados do site deletados do seu navegador com sucesso');
-  })
+    toast("Dados do site deletados do seu navegador com sucesso");
+  });
 
   const generatePassBtn = document.querySelector(".generatepassbtn");
   const savePassBtn = document.querySelector(".savepassbtn");
   const output = document.querySelector(".output");
   const textoutput = document.querySelector(".text-output");
   const copyPass = document.querySelector(".bi-clipboard");
-  if(localStorage.getItem('password-output')) {
-    textoutput.textContent = `Senha atual gerada: ${localStorage.getItem('password-output')}`
+  if (localStorage.getItem("password-output")) {
+    textoutput.textContent = `Senha atual gerada: ${localStorage.getItem(
+      "password-output"
+    )}`;
     output.classList.add("active");
     copyPass.addEventListener("click", () => {
       copyPass.classList.add("bi-clipboard-check");
@@ -284,95 +328,91 @@ document.addEventListener("DOMContentLoaded", () => {
         useCaseSensitive,
       };
 
-      localStorage.setItem("password-output", password);
-      
-      output.classList.add("active");
-      textoutput.textContent = `Sua senha gerada: ${password}!`;
-  
-      copyPass.addEventListener("click", () => {
-        copyPass.classList.add("bi-clipboard-check");
-        copyPass.classList.remove("bi-clipboard");
-        copyToClipboard(password);
-        setTimeout(() => {
-          copyPass.classList.add("bi-clipboard");
-          copyPass.classList.remove("bi-clipboard-check");
-        }, 4000);
-      });
-  
-      setTimeout(() => {
-        output.classList.remove("active");
-        textoutput.textContent = "";
-      }, 50000);
-
       hashPassword(password).then((hash) => {
         passwordData.hash = hash;
         savePasswordData(passwordData);
         toast(`Senha salva no seu navegador! Força da senha: ${strength}`);
       });
-      location.reload();
-    }
-  }
-
-  function generateUniqueId() {
-    return (
-      "id-" + new Date().getTime() + "-" + Math.floor(Math.random() * 10000)
-    );
-  }
-
-  async function hashPassword(password) {
-    const msgBuffer = new TextEncoder().encode(password);
-    const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray
-      .map((b) => b.toString(16).padStart(2, "0"))
-      .join("");
-    return hashHex;
-  }
-
-  function savePasswordData(passwordData) {
-    const savedPasswords =
-      JSON.parse(localStorage.getItem("savedPasswords")) || [];
-    savedPasswords.push(passwordData);
-    localStorage.setItem("savedPasswords", JSON.stringify(savedPasswords));
-  }
-
-  function calculatePasswordStrength(
-    password,
-    useSpecialChars,
-    useRandomNumbers,
-    useCaseSensitive
-  ) {
-    let strength = 0;
-
-    if (password.length >= 12) {
-      strength += 2;
-    } else if (password.length >= 8) {
-      strength += 1;
     }
 
-    if (useSpecialChars) {
-      strength += 2;
+    function generateUniqueId() {
+      return (
+        "id-" + new Date().getTime() + "-" + Math.floor(Math.random() * 10000)
+      );
     }
 
-    if (useRandomNumbers) {
-      strength += 1;
+    async function hashPassword(password) {
+      const msgBuffer = new TextEncoder().encode(password);
+      const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("");
+      return hashHex;
     }
 
-    if (useCaseSensitive) {
-      strength += 1;
+    async function savePasswordData(passwordData) {
+      const savedPasswords =
+        JSON.parse(localStorage.getItem("savedPasswords")) || [];
+      const encryptedPassword = await encryptPassword(passwordData.password);
+      passwordData.password = encryptedPassword;
+      savedPasswords.push(passwordData);
+      localStorage.setItem("savedPasswords", JSON.stringify(savedPasswords));
     }
 
-    switch (strength) {
-      case 5:
-      case 6:
-        return "Forte";
-      case 3:
-      case 4:
-        return "Média";
-      case 1:
-      case 2:
-      default:
-        return "Fraca";
+    async function encryptPassword(password) {
+      const passwordBytes = new TextEncoder().encode(password);
+      const key = await getKey();
+      const iv = crypto.getRandomValues(new Uint8Array(12)); // GCM nonce/IV
+      const encryptedPassword = await crypto.subtle.encrypt(
+        { name: "AES-GCM", iv: iv },
+        key,
+        passwordBytes
+      );
+      return {
+        iv: Array.from(iv),
+        encrypted: Array.from(new Uint8Array(encryptedPassword)),
+      };
+    }
+
+    function calculatePasswordStrength(
+      password,
+      useSpecialChars,
+      useRandomNumbers,
+      useCaseSensitive
+    ) {
+      let strength = 0;
+
+      if (password.length >= 12) {
+        strength += 2;
+      } else if (password.length >= 8) {
+        strength += 1;
+      }
+
+      if (useSpecialChars) {
+        strength += 2;
+      }
+
+      if (useRandomNumbers) {
+        strength += 1;
+      }
+
+      if (useCaseSensitive) {
+        strength += 1;
+      }
+
+      switch (strength) {
+        case 5:
+        case 6:
+          return "Forte";
+        case 3:
+        case 4:
+          return "Média";
+        case 1:
+        case 2:
+        default:
+          return "Fraca";
+      }
     }
   }
   function copyToClipboard(text) {

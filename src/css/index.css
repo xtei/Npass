@@ -34,6 +34,11 @@ header {
   margin: 40px 90px 0 100px;
 }
 
+main {
+  display: flex;
+  align-items: center;
+}
+
 .logo-npass {
   width: 50px;
 }

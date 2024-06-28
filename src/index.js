@@ -185,7 +185,7 @@ async function displayPasswords() {
   }
 }
 
-async function calculatePasswordStrength(
+function calculatePasswordStrength(
   password,
   useSpecialChars,
   useRandomNumbers,

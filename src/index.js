@@ -1,3 +1,16 @@
+//Cookies
+const btnCookies = document.querySelector(".close-bottom-cookies");
+const dialogCookies = document.querySelector(".back-container-bottom-cookies");
+
+if(localStorage.getItem("cookies") === "enabled") {
+  dialogCookies.style.display = "none";
+}
+
+btnCookies.addEventListener("click", () => {
+  localStorage.setItem("cookies", "enabled");
+  dialogCookies.style.display ='none';
+});
+
 //sidebar
 const sidebar = document.querySelector(".side-bar");
 const btnShowSidebar = document.querySelector(".toggle-sidebar");

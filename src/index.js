@@ -35,6 +35,7 @@ itensSideBar.forEach((item) => {
   item.addEventListener("click", () => {
     itensSideBar.forEach((i) => i.classList.remove("active"));
     item.classList.add("active");
+    sidebar.classList.remove("active");
     const section = item.getAttribute("data-section");
     if (section === "generatePass") {
       generatePassSection.style.display = "block";

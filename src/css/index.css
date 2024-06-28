@@ -6,6 +6,7 @@
 
 body {
   background: #0a0115;
+  overflow-x: hidden;
 }
 
 .bottom-svg {
@@ -25,6 +26,7 @@ header {
   align-items: center;
   width: 100%;
   z-index: 10000;
+  padding: 10px;
   margin: 40px 90px 0 100px;
 }
 

@@ -2,11 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
+      name="description"
+      content="NPASS é uma ferramenta online segura para geração e armazenamento de senhas. Gere senhas fortes, armazene-as com segurança e exporte para backup facilmente. Experimente hoje mesmo!"
     />
-    <meta name="description" content="NPASS é uma ferramenta online segura para geração e armazenamento de senhas. Gere senhas fortes, armazene-as com segurança e exporte para backup facilmente. Experimente hoje mesmo!">
     <title>NPASS</title>
     <link
       rel="icon"
@@ -44,13 +44,12 @@
         <h4 class="description-cookies">
           Nosso site utiliza cookies para melhorar a sua experiência de
           navegação e personalizar o conteúdo que oferecemos. Com a sua
-          permissão, utilizamos cookies para as seguintes finalidades: <br>
-          Cookies Necessários,
-          Cookies de Desempenho,
-          Cookies de Funcionalidade.
-          <p> Ao continuar navegando em nosso site</p>, você concorda com o uso desses
-          cookies. Você pode configurar suas preferências de cookies a qualquer
-          momento nas configurações do navegador.
+          permissão, utilizamos cookies para as seguintes finalidades: <br />
+          Cookies Necessários, Cookies de Desempenho, Cookies de Funcionalidade.
+          <p>Ao continuar navegando em nosso site</p>
+          , você concorda com o uso desses cookies. Você pode configurar suas
+          preferências de cookies a qualquer momento nas configurações do
+          navegador.
         </h4>
         <button class="close-bottom-cookies">
           Ao continuar você estará autorizando o uso de cookies!
@@ -144,6 +143,70 @@
         </button>
       </div>
     </div>
+    <div class="back-info-pass">
+      <div class="dialog-info-pass">
+        <div class="header-dialog">
+          <h1 class="title-dialog">Dados da senha:</h1>
+          <i class="bi bi-info-circle"></i>
+        </div>
+        <hr />
+        <h1 class="description">
+          Aqui você encontra informações da senha gerada.
+        </h1>
+        <hr />
+
+        <div class="senha-container">
+          <h5 class="appNameInfor">App name</h5> <hr>
+          <h5 class="pass-set">senha aqui</h5>
+          <i class="bi bi-copy"></i>
+        </div>
+        <hr />
+        <h6 class="data-created">Senha criada em 10/10/2024</h6>
+        <hr />
+        <div class="others-infor">
+          <h1 class="description topic">Outros dados</h1>
+          <div class="dados-container">
+            <div class="infor-content">
+              <h4 class="title-infor">Segurança da senha:</h4>
+              <hr />
+              <div class="progressbar">
+                <div class="progs prog-security"></div>
+              </div>
+            </div>
+            <hr />
+            <div class="infor-content">
+              <h4 class="title-infor">Utilizou Números Aleatórios:</h4>
+              <hr />
+              <div class="senha-container setting-set useRandomNumbers true">
+                <h5 class="used useRandomNumbersText">Sim</h5>
+                <i class="bi bi-check-circle-fill useRandomNumbersIcon"></i>
+              </div>
+            </div>
+            <hr />
+            <div class="infor-content">
+              <h4 class="title-infor">Utilizou Letras Maius. e Minus.:</h4>
+              <hr />
+              <div class="senha-container setting-set useCaseSensitive true">
+                <h5 class="used useCaseSensitiveText">Sim</h5>
+                <i class="bi bi-check-circle-fill useCaseSensitiveIcon"></i>
+              </div>
+            </div>
+            <hr />
+            <div class="infor-content">
+              <h4 class="title-infor">Utilizou Caracteres Especiais:</h4>
+              <hr />
+              <div class="senha-container setting-set useSpecialChars true">
+                <h5 class="used useSpecialCharsText">Sim</h5>
+                <i class="bi bi-check-circle-fill useSpecialCharsIcon"></i>
+              </div>
+            </div>
+           
+          </div>
+        </div>
+        <hr />
+        <button class="close-dados-dialog">Fechar</button>
+      </div>
+    </div>
     <svg
       class="top-svg"
       xmlns="http://www.w3.org/2000/svg"
@@ -167,7 +230,11 @@
         <h1 class="title-site">NPASS</h1>
       </div>
       <ul class="services-area">
-        <li><a href="https://github.com/xtei/Npass.git" target="_blank">Acessar repositório GitHub</a></li>
+        <li>
+          <a href="https://github.com/xtei/Npass.git" target="_blank"
+            >Acessar repositório GitHub</a
+          >
+        </li>
       </ul>
     </header>
     <main>
@@ -331,9 +398,13 @@
         <hr />
         <div class="search-pass-area">
           <i class="bi bi-search"></i>
-          <input type="text" id="search-input" placeholder="Pesquisar por senhas">
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Pesquisar por senhas"
+          />
         </div>
-        <hr>
+        <hr />
         <div class="list-pass-area">
           <div class="option-content-pass">
             <div class="one-area">
@@ -352,7 +423,6 @@
     <script>
       (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
-    
     <script src="src/index.js"></script>
   </body>
 </html>

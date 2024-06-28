@@ -30,6 +30,14 @@
     ></script>
   </head>
   <body>
+    <div class="loading-back">
+      <div class="loading-content">
+        <p class="loading-text">Iniciando...</p>
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+      </div>
+    </div>
     <div class="back-toast">
       <div class="toast-container">
         <h1 class="text-toast">TxtToast</h1>
@@ -62,7 +70,12 @@
           maxlength="15"
         />
         <hr />
-        <button class="next-dialog">Criar Senha</button>
+        <button class="next-dialog">
+          <i class="bi bi-plus"></i>Criar Senha
+        </button>
+        <button class="close-dialog-create-pass">
+          <i class="bi bi-x"></i> Cancelar a ação
+        </button>
       </div>
     </div>
     <div class="back-setemailuser">
@@ -76,6 +89,9 @@
         <hr />
         <button class="send-email">
           <i class="bi bi-person-fill-down"></i> Solicitar Senhas
+        </button>
+        <button class="close-dialog-get-pass">
+          <i class="bi bi-x"></i> Cancelar a ação
         </button>
       </div>
     </div>
@@ -101,6 +117,13 @@
         </button>
       </div>
     </div>
+    <svg class="top-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+      <path
+        fill="#300962"
+        fill-opacity="0.5"
+        d="M0,64L180,192L360,224L540,224L720,64L900,64L1080,288L1260,0L1440,160L1440,0L1260,0L1080,0L900,0L720,0L540,0L360,0L180,0L0,0Z"
+      ></path>
+    </svg>
     <header>
       <div class="site-area-name">
         <a href="https://postimg.cc/xkJ4BvwZ" target="_blank"
@@ -113,20 +136,22 @@
         <h1 class="title-site">NPASS</h1>
       </div>
       <ul class="services-area">
-        <li>
-          <button class="receber-senhas fr">
-            <i class="bi bi-cloud-upload"></i> Receba suas senhas
-          </button>
-        </li>
-        <li>
-          <button class="clear-cache fr">
-            <i class="bi bi-trash"></i> Limpar Senhas
-          </button>
-        </li>
+        <li><a href="#">Acessar repositório GitHub</a></li>
         <li><a href="#">Sobre</a></li>
       </ul>
     </header>
     <main>
+      <svg
+        class="bottom-svg"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 1440 320"
+      >
+        <path
+          fill="#a2d9ff"
+          fill-opacity="1"
+          d="M0,96L75.8,32L151.6,0L227.4,224L303.2,224L378.9,320L454.7,224L530.5,128L606.3,32L682.1,96L757.9,160L833.7,128L909.5,0L985.3,128L1061.1,128L1136.8,288L1212.6,160L1288.4,96L1364.2,224L1440,128L1440,320L1364.2,320L1288.4,320L1212.6,320L1136.8,320L1061.1,320L985.3,320L909.5,320L833.7,320L757.9,320L682.1,320L606.3,320L530.5,320L454.7,320L378.9,320L303.2,320L227.4,320L151.6,320L75.8,320L0,320Z"
+        ></path>
+      </svg>
       <ins
         class="adsbygoogle"
         style="display: block; text-align: center"
@@ -135,6 +160,37 @@
         data-ad-client="ca-pub-7756443028350434"
         data-ad-slot="3916036880"
       ></ins>
+      <div class="back-sidebar"></div>
+      <div class="side-bar">
+        <div class="site-area-name">
+          <a href="https://postimg.cc/xkJ4BvwZ" target="_blank"
+            ><img
+              class="logo-npass"
+              src="https://i.postimg.cc/xkJ4BvwZ/transparent-logo.png"
+              border="0"
+              alt="transparent-logo"
+          /></a>
+          <h1>Menu</h1>
+          <i class="bi bi-chevron-double-right toggle-sidebar"></i>
+        </div>
+        <hr />
+        <div class="options-side-bar" data-section="generatePass">
+          <i class="bi bi-plus"></i>
+          <h4 class="option-text-sidebar">Criar nova senha</h4>
+        </div>
+        <div class="options-side-bar" data-section="listPasswords">
+          <i class="bi bi-card-checklist"></i>
+          <h4 class="option-text-sidebar">Ver senhas</h4>
+        </div>
+        <div class="options-side-bar receber-senhas">
+          <i class="bi bi-cloud-download"></i>
+          <h4 class="option-text-sidebar">Receber Senhas</h4>
+        </div>
+        <div class="options-side-bar clear-cache">
+          <i class="bi bi-shield-x"></i>
+          <h4 class="option-text-sidebar">Limpar Senhas</h4>
+        </div>
+      </div>
       <section class="generatePassSection">
         <div class="header-section">
           <a href="https://postimg.cc/xkJ4BvwZ" target="_blank"
@@ -144,7 +200,7 @@
               border="0"
               alt="transparent-logo"
           /></a>
-          <h1 class="title-page">Generate Pass</h1>
+          <h1 class="title-page">Gerar Senha</h1>
         </div>
         <hr />
         <h4 class="description">
@@ -217,6 +273,43 @@
             <h1 class="text-output"></h1>
             <h4 id="hidden-password-input" style="display: none"></h4>
             <i class="bi bi-clipboard"></i>
+          </div>
+        </div>
+      </section>
+      <section class="list-passwords-content">
+        <div class="header-section">
+          <a href="https://postimg.cc/xkJ4BvwZ" target="_blank"
+            ><img
+              class="logo-npass"
+              src="https://i.postimg.cc/xkJ4BvwZ/transparent-logo.png"
+              border="0"
+              alt="transparent-logo"
+          /></a>
+          <h1 class="title-page">Lista de senhas salvas</h1>
+        </div>
+        <hr />
+        <h4 class="description">
+          Aqui está suas senhas criadas, gerencie elas do seu jeito!
+        </h4>
+        <hr />
+        <div class="info-list">
+          <h5 id="list-length">Total de senhas: 0</h5>
+          <h5 id="pass-weak">Senhas Fracas: 0</h5>
+          <h5 id="pass-medium">Senhas Medias: 0</h5>
+          <h5 id="pass-strong">Senhas Fortes: 0</h5>
+        </div>
+        <hr />
+        <div class="list-pass-area">
+          <div class="option-content-pass">
+            <div class="one-area">
+              <i class="bi bi-cloud-arrow-up"></i>
+              <h3 class="app-pass">App name</h3>
+            </div>
+            <div class="rigth-area">
+              <h4 class="showpass">Mostrar Senha</h4>
+              <i class="bi bi-trash3"></i>
+              <i class="bi bi-clipboard"></i>
+            </div>
           </div>
         </div>
       </section>

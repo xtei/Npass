@@ -57,6 +57,12 @@
         </div>
       </div>
     </div>
+    <div class="back-toastchange">
+      <div class="toast-container">
+        <h1 class="text-toast1">Para salvar as alterações, reinicie a pagina</h1>
+        <i class="bi bi-arrow-clockwise"></i>
+      </div>
+    </div>
     <div class="back-toast">
       <div class="toast-container">
         <h1 class="text-toast">TxtToast</h1>
@@ -319,8 +325,8 @@
             <hr />
             <h6 class="require">Configurações Opcionais</h6>
             <h1 class="title-advanced-op">Opções avançadas</h1>
-            <input type="date"/>
-            <hr>
+            <input type="date" />
+            <hr />
             <div class="option-advanced">
               <input type="checkbox" class="chk" id="chk1" />
               <label for="chk1" class="switch" id="switch1">
@@ -376,9 +382,9 @@
         <hr />
         <div class="info-list">
           <h5 id="list-length">Total de senhas: 0</h5>
-          <h5 id="pass-weak">Senhas Fracas: 0</h5>
-          <h5 id="pass-medium">Senhas Medias: 0</h5>
-          <h5 id="pass-strong">Senhas Fortes: 0</h5>
+          <h5 class="passSeq" id="pass-weak">Senhas Fracas: 0</h5>
+          <h5 class="passSeq" id="pass-medium">Senhas Medias: 0</h5>
+          <h5 class="passSeq" id="pass-strong">Senhas Boas: 0</h5>
         </div>
         <hr />
         <div class="search-pass-area">
@@ -387,8 +393,16 @@
             type="text"
             id="search-input"
             placeholder="Pesquisar por senhas"
+            maxlength="20"
           />
         </div>
+        <hr>
+        <input type="file" class="import" accept=".nps" style="display: none;"/>
+        <input type="file" class="import-onepass" accept=".npsu" style="display: none;"/>
+        <button class="import-trigger"><i class="bi bi-cloud-upload"></i> Importar senhas (Tipo NPS)</button>
+        <button class="import-pass"><i class="bi bi-cloud-upload"></i> Importar Senha Unica (Tipo NPSU)</button>
+        <hr>
+        <button class="export"><i class="bi bi-cloud-download"></i> Exportar senhas (Tipo NPS)</button>
         <hr />
         <div class="not-passwords">
           <div class="top">
@@ -406,6 +420,11 @@
             </div>
             <div class="rigth-area">
               <h4 class="showpass">Mostrar Senha</h4>
+              <div class="showpassio">
+                Força da senha:
+                <h4 class="force-set"> Fraca</h4>
+                <div class="status-div"></div>
+              </div>
               <i class="bi bi-trash3"></i>
               <i class="bi bi-clipboard"></i>
             </div>

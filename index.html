@@ -60,7 +60,9 @@
     </div>
     <div class="back-toastchange">
       <div class="toast-container">
-        <h1 class="text-toast1">Para salvar as alterações, reinicie a pagina</h1>
+        <h1 class="text-toast1">
+          Para salvar as alterações, reinicie a pagina
+        </h1>
         <i class="bi bi-arrow-clockwise"></i>
       </div>
     </div>
@@ -387,13 +389,6 @@
           <h5 class="passSeq" id="pass-medium">Senhas Medias: 0</h5>
           <h5 class="passSeq" id="pass-strong">Senhas Boas: 0</h5>
         </div>
-        <hr>
-        <input type="file" class="import" accept=".nps" style="display: none;"/>
-        <input type="file" class="import-onepass" accept=".npsu" style="display: none;"/>
-        <button class="import-trigger"><i class="bi bi-cloud-upload"></i> Importar senhas (Tipo NPS)</button>
-        <button class="import-pass"><i class="bi bi-cloud-upload"></i> Importar Senha Unica (Tipo NPSU)</button>
-        <hr>
-        <button class="export"><i class="bi bi-cloud-download"></i> Exportar senhas (Tipo NPS)</button>
         <hr />
         <div class="search-pass-area">
           <i class="bi bi-search"></i>
@@ -403,8 +398,56 @@
             placeholder="Pesquisar por senhas"
             maxlength="20"
           />
-        </div> 
-        <hr>
+          
+          <div class="filter-area">
+            <div class="back-options">
+              <div class="top-back-options">
+                <h1>Filtrar</h1>
+                <i class="bi bi-caret-up-fill"></i>
+              </div>
+            </div>
+            <div class="bg-drop bg-dropfilter">
+              <div class="top-bg">
+                <i class="bi bi-x closeOptsFilter"></i>
+              </div>
+              <div class="options-drop" data-filter="Senhas-Faceis">
+                <h5>Senhas faceis</h5>
+              </div>
+              <div class="options-drop" data-filter="Senhas-Medias">
+                <h5>Senhas medias</h5>
+              </div>
+              <div class="options-drop" data-filter="Senhas-Dificeis">
+                <h5>Senhas dificeis</h5>
+              </div>
+              <hr />
+              <div class="options-drop" data-filter="Recentes">
+                <h5>Recentes</h5>
+              </div>
+              <div class="options-drop" data-filter="Antigas"><h5>Antigas</h5></div>
+            </div>
+            <div class="bf">
+            </div>
+          </div>
+        </div>
+        <hr />
+        <input type="file" class="import" accept=".nps" style="display: none" />
+        <input
+          type="file"
+          class="import-onepass"
+          accept=".npsu"
+          style="display: none"
+        />
+        <button class="import-trigger">
+          <i class="bi bi-cloud-upload"></i> Importar senhas (Tipo NPS)
+        </button>
+        <button class="import-pass">
+          <i class="bi bi-cloud-upload"></i> Importar Senha Unica (Tipo NPSU)
+        </button>
+        <hr />
+        <button class="export">
+          <i class="bi bi-cloud-download"></i> Exportar senhas (Tipo NPS)
+        </button>
+        <hr />
         <div class="not-passwords">
           <div class="top">
             <i class="bi bi-cloud-minus"></i>
@@ -422,8 +465,8 @@
             <div class="rigth-area">
               <h4 class="showpass">Mostrar Senha</h4>
               <div class="showpassio">
-                Força da senha:
-                <h4 class="force-set"> Fraca</h4>
+                <h6 class="ts">Força da senha:</h6>
+                <h4 class="force-set">Fraca</h4>
                 <div class="status-div"></div>
               </div>
               <i class="bi bi-trash3"></i>

@@ -390,6 +390,24 @@
           <h5 class="passSeq" id="pass-strong">Senhas Boas: 0</h5>
         </div>
         <hr />
+        <input type="file" class="import" accept=".nps" style="display: none" />
+        <input
+          type="file"
+          class="import-onepass"
+          accept=".npsu"
+          style="display: none"
+        />
+        <button class="import-trigger">
+          <i class="bi bi-cloud-upload"></i> Importar senhas (Tipo NPS)
+        </button>
+        <button class="import-pass">
+          <i class="bi bi-cloud-upload"></i> Importar Senha Unica (Tipo NPSU)
+        </button>
+        <hr />
+        <button class="export">
+          <i class="bi bi-cloud-download"></i> Exportar senhas (Tipo NPS)
+        </button>
+        <hr />
         <div class="search-pass-area">
           <i class="bi bi-search"></i>
           <input
@@ -398,7 +416,7 @@
             placeholder="Pesquisar por senhas"
             maxlength="20"
           />
-          
+
           <div class="filter-area">
             <div class="back-options">
               <div class="top-back-options">
@@ -423,30 +441,13 @@
               <div class="options-drop" data-filter="Recentes">
                 <h5>Recentes</h5>
               </div>
-              <div class="options-drop" data-filter="Antigas"><h5>Antigas</h5></div>
+              <div class="options-drop" data-filter="Antigas">
+                <h5>Antigas</h5>
+              </div>
             </div>
-            <div class="bf">
-            </div>
+            <div class="bf"></div>
           </div>
         </div>
-        <hr />
-        <input type="file" class="import" accept=".nps" style="display: none" />
-        <input
-          type="file"
-          class="import-onepass"
-          accept=".npsu"
-          style="display: none"
-        />
-        <button class="import-trigger">
-          <i class="bi bi-cloud-upload"></i> Importar senhas (Tipo NPS)
-        </button>
-        <button class="import-pass">
-          <i class="bi bi-cloud-upload"></i> Importar Senha Unica (Tipo NPSU)
-        </button>
-        <hr />
-        <button class="export">
-          <i class="bi bi-cloud-download"></i> Exportar senhas (Tipo NPS)
-        </button>
         <hr />
         <div class="not-passwords">
           <div class="top">

@@ -690,7 +690,7 @@ input:focus {
   color: #fff;
   width: 50%;
   padding: 20px;
-  margin: 0 5px;
+  margin: 0 5px 0 0;
   background: #2b1845;
   border-radius: 20px;
 }

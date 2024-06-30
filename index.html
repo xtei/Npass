@@ -239,17 +239,6 @@
       </ul>
     </header>
     <main>
-      <svg
-        class="bottom-svg"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 1440 320"
-      >
-        <path
-          fill="#a2d9ff"
-          fill-opacity="1"
-          d="M0,96L75.8,32L151.6,0L227.4,224L303.2,224L378.9,320L454.7,224L530.5,128L606.3,32L682.1,96L757.9,160L833.7,128L909.5,0L985.3,128L1061.1,128L1136.8,288L1212.6,160L1288.4,96L1364.2,224L1440,128L1440,320L1364.2,320L1288.4,320L1212.6,320L1136.8,320L1061.1,320L985.3,320L909.5,320L833.7,320L757.9,320L682.1,320L606.3,320L530.5,320L454.7,320L378.9,320L303.2,320L227.4,320L151.6,320L75.8,320L0,320Z"
-        ></path>
-      </svg>
       <div class="back-sidebar"></div>
       <div class="side-bar">
         <div class="site-area-name">
@@ -272,13 +261,15 @@
           <i class="bi bi-card-checklist"></i>
           <h4 class="option-text-sidebar">Ver senhas</h4>
         </div>
-        <div class="options-side-bar receber-senhas">
-          <i class="bi bi-cloud-download"></i>
-          <h4 class="option-text-sidebar">Receber Senhas</h4>
-        </div>
-        <div class="options-side-bar clear-cache">
-          <i class="bi bi-shield-x"></i>
-          <h4 class="option-text-sidebar">Limpar Senhas</h4>
+        <div class="options-bottom">
+          <div class="options-side-bar receber-senhas">
+            <i class="bi bi-cloud-download"></i>
+            <h4 class="option-text-sidebar">Receber Senhas</h4>
+          </div>
+          <div class="options-side-bar clear-cache">
+            <i class="bi bi-shield-x"></i>
+            <h4 class="option-text-sidebar">Limpar Senhas</h4>
+          </div>
         </div>
       </div>
       <section class="generatePassSection">
@@ -397,16 +388,27 @@
           accept=".npsu"
           style="display: none"
         />
-        <button class="import-trigger">
+        <button class="import-trigger bt expim">
           <i class="bi bi-cloud-upload"></i> Importar senhas (Tipo NPS)
         </button>
-        <button class="import-pass">
+        <hr class="bt-hr" />
+        <button class="import-pass bt expim">
           <i class="bi bi-cloud-upload"></i> Importar Senha Unica (Tipo NPSU)
         </button>
-        <hr />
-        <button class="export">
+        <hr class="bt-hr" />
+        <button class="export expim">
           <i class="bi bi-cloud-download"></i> Exportar senhas (Tipo NPS)
         </button>
+        <hr class="hr-file" />
+        <div class="importfilecontent">
+          <div class="top">
+            <i class="bi bi-cloud-arrow-down"></i>
+            <h1 class="importfileh1">
+              Arraste um arquivo até aqui, NPS (Para senhas em bloco) ou NPSU
+              (Para senhas unicas)
+            </h1>
+          </div>
+        </div>
         <hr />
         <div class="search-pass-area">
           <i class="bi bi-search"></i>

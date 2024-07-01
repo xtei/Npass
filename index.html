@@ -50,6 +50,16 @@
         </button>
       </div>
     </div>
+    <div class="back-mode-select">
+      <div class="mode-select-bg">
+        <i class="bi bi-x closeModeSelect"></i>
+        <h6 class="number-passwordSelect">0 Senhas Selecionadas</h6>
+        <div class="rigth-options">
+          <i class="bi bi-trash3 deletePasswordsSelects"></i>
+          <i class="bi bi-cloud-arrow-down exportsPasswordsSelects"></i>
+        </div>
+      </div>
+    </div>
     <div class="loading-back">
       <div class="loading-content dialogSite">
         <p class="loading-text">Iniciando...</p>
@@ -239,6 +249,7 @@
       </ul>
     </header>
     <main>
+
       <div class="back-sidebar"></div>
       <div class="side-bar">
         <div class="site-area-name">
@@ -404,7 +415,7 @@
           <div class="top">
             <i class="bi bi-cloud-arrow-down"></i>
             <h1 class="importfileh1">
-              Arraste um arquivo até aqui, NPS (Para senhas em bloco) ou NPSU
+              Arraste um arquivo terminado em .nps (Para senhas em bloco) ou .npsu
               (Para senhas unicas)
             </h1>
           </div>
@@ -431,13 +442,13 @@
                 <i class="bi bi-x closeOptsFilter"></i>
               </div>
               <div class="options-drop" data-filter="Senhas-Faceis">
-                <h5>Senhas faceis</h5>
+                <h5>Senhas Fracas</h5>
               </div>
               <div class="options-drop" data-filter="Senhas-Medias">
-                <h5>Senhas medias</h5>
+                <h5>Senhas Medias</h5>
               </div>
               <div class="options-drop" data-filter="Senhas-Dificeis">
-                <h5>Senhas dificeis</h5>
+                <h5>Senhas Dificeis</h5>
               </div>
               <hr />
               <div class="options-drop" data-filter="Recentes">
@@ -476,6 +487,17 @@
               <i class="bi bi-clipboard"></i>
             </div>
           </div>
+        </div>
+        <hr>
+        <div class="buttons-area">
+          <button class="btn-pages previous">
+            <i class="bi bi-caret-left"></i>
+            Pagina Anterior
+          </button>
+          <button class="btn-pages next">
+            <i class="bi bi-caret-right"></i>
+            Proxima Pagina
+          </button>
         </div>
       </section>
     </main>

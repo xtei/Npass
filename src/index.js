@@ -1,1 +1,1528 @@
-const sidebar=document.querySelector(".side-bar"),btnCookies=document.querySelector(".close-bottom-cookies"),dialogCookies=document.querySelector(".back-container-bottom-cookies");sidebar.style.display="none","enabled"===localStorage.getItem("cookies")&&(sidebar.style.display="block",dialogCookies.style.display="none"),btnCookies.addEventListener("click",()=>{localStorage.setItem("cookies","enabled"),dialogCookies.style.display="none",sidebar.style.display="block"});const btnShowSidebar=document.querySelector(".toggle-sidebar"),backSideBar=document.querySelector(".back-sidebar"),itensSideBar=document.querySelectorAll(".options-side-bar");backSideBar.addEventListener("click",()=>{sidebar.classList.remove("active"),backSideBar.classList.remove("active")}),btnShowSidebar.addEventListener("click",()=>{sidebar.classList.toggle("active"),backSideBar.classList.toggle("active")});const generatePassSection=document.querySelector(".generatePassSection"),listPasswordsSection=document.querySelector(".list-passwords-content"),listPasswordsContent=document.querySelector(".list-pass-area");itensSideBar.forEach(a=>{a.addEventListener("click",()=>{itensSideBar.forEach(a=>a.classList.remove("active")),a.classList.add("active"),sidebar.classList.remove("active");const b=a.getAttribute("data-section");"generatePass"===b?(generatePassSection.style.display="block",listPasswordsSection.style.display="none"):"listPasswords"===b&&(generatePassSection.style.display="none",listPasswordsSection.style.display="block")})});const mainItem=document.querySelector(".options-side-bar[data-section='generatePass']");mainItem.classList.add("active"),generatePassSection.style.display="block",listPasswordsSection.style.display="none";async function exportSinglePassword(a,b,c,d,e,f,g,h){const i=await getKey(),j=await exportKey(i),k={version:"1.0",appName:b,password:a,dateCreated:"Arquivo exportado em: "+new Date().toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit",second:"2-digit"})+"Data de cria\xE7\xE3o: "+c,hash:d,useSpecialChars:e,useRandomNumbers:f,useCaseSensitive:g,passwordStrength:h},l=new Blob([JSON.stringify({key:j,data:k})],{type:"application/octet-stream"});saveAs(l,`${b}.npsu`)}const totalPasswords=document.querySelector("#list-length"),weakPasswords=document.querySelector("#pass-weak"),mediumPasswords=document.querySelector("#pass-medium"),strongPasswords=document.querySelector("#pass-strong"),savedPasswords=JSON.parse(localStorage.getItem("savedPasswords"))||[],notPasswords=document.querySelector(".not-passwords"),notFoundText=document.querySelector(".not-found-text");let weakCount=0,mediumCount=0,strongCount=0;const searchInput=document.getElementById("search-input");searchInput.addEventListener("input",function(){const a=this.value.toLowerCase(),b=document.querySelectorAll(".option-content-pass");let c=!1;b.forEach(b=>{const d=b.querySelector(".app-pass").innerText.toLowerCase();d.includes(a)?(b.style.display="flex",c=!0):b.style.display="none"}),c?notPasswords.style.display="none":(notPasswords.style.display="flex",notFoundText.textContent="Nenhuma senha encontrada! Tente novamente!")});const bgOptionsFilter=document.querySelector(".bg-dropfilter"),showbgOptionsFilter=document.querySelector(".back-options"),closebgOptionsFilter=document.querySelector(".closeOptsFilter");showbgOptionsFilter.addEventListener("click",()=>{bgOptionsFilter.classList.add("active")}),closebgOptionsFilter.addEventListener("click",()=>{bgOptionsFilter.classList.remove("active")});const typeFilterContainer=document.querySelector(".bf");document.querySelectorAll(".options-drop").forEach(a=>{a.addEventListener("click",a=>{const b=a.currentTarget.getAttribute("data-filter");bgOptionsFilter.classList.remove("active"),searchInput.value="",notPasswords.style.display="none";const c=document.querySelector(`.output-filter[data-filter="yes"]`);if(c)return;filterPasswords(b);const d=document.createElement("div");d.classList.add("output-filter"),d.setAttribute("data-filter","yes");const e=document.createElement("h5");e.textContent=b;const f=document.createElement("i");f.classList.add("bi","bi-x"),d.appendChild(e),d.appendChild(f),typeFilterContainer.appendChild(d),f.addEventListener("click",()=>{typeFilterContainer.removeChild(d),searchInput.value="",notPasswords.style.display="none",displayPasswords()})})});function filterPasswords(a){let b=savedPasswords;"Senhas-Faceis"===a?b=savedPasswords.filter(a=>"Fraca"===a.passwordStrength):"Senhas-Medias"===a?b=savedPasswords.filter(a=>"M\xE9dia"===a.passwordStrength):"Senhas-Dificeis"===a?b=savedPasswords.filter(a=>"Forte"===a.passwordStrength):"Recentes"===a?b.sort((c,a)=>new Date(a.dateCreated)-new Date(c.dateCreated)):"Antigas"==a&&b.sort((c,a)=>new Date(c.dateCreated)-new Date(a.dateCreated)),displayFilteredPasswords(b)}function displayFilteredPasswords(a){listPasswordsContent.innerHTML="",0<a.length?notPasswords.style.display="none":(notPasswords.style.display="flex",notFoundText.textContent=`Nenhuma senha com esse filtro encontrada! Tente novamente!`),a.forEach(a=>{const b=document.createElement("div");b.classList.add("option-content-pass");const c=document.createElement("div");c.classList.add("one-area");const d=document.createElement("div");d.classList.add("rigth-area");const e=document.createElement("i");e.classList.add("bi","bi-clipboard");const f=a.passwordStrength,g=document.createElement("div");g.classList.add("showpassio");const h=document.createElement("h6");h.classList.add("ts");const i=document.createElement("h4");i.textContent=f,i.classList.add("force-set");const j=document.createElement("div");j.classList.add("status-div"),"Forte"===f?(j.classList.add("strongest"),b.classList.add("strongest")):"Fraca"===f?(j.classList.add("weak"),b.classList.add("weak")):"M\xE9dia"===f&&(j.classList.add("medium"),b.classList.add("medium")),g.appendChild(h),g.appendChild(i),g.appendChild(j);const k=document.createElement("i");k.classList.add("bi","bi-cloud-arrow-up"),k.addEventListener("click",async()=>{exportSinglePassword(a.password,a.appName,a.dateCreated,a.hash,a.useSpecialChars,a.useRandomNumbers,a.useCaseSensitive,a.passwordStrength)});const l=document.createElement("h3");l.classList.add("app-pass"),l.textContent=a.appName;const m=document.createElement("h4");m.classList.add("showpass"),m.textContent="Mostrar Senha",e.addEventListener("click",async()=>{const b=await decryptPassword(a.password);copyToClipboard(b),toast("Senha copiada com sucesso"),e.classList.add("bi-clipboard-check"),e.classList.remove("bi-clipboard"),setTimeout(()=>{e.classList.remove("bi-clipboard-check"),e.classList.add("bi-clipboard")},2e3)});const n=document.createElement("i");n.classList.add("bi","bi-trash3"),n.addEventListener("click",()=>{const b=savedPasswords.indexOf(a);savedPasswords.splice(b,1),localStorage.setItem("savedPasswords",JSON.stringify(savedPasswords)),displayPasswords(),updatePasswordsCounters()}),m.addEventListener("click",async()=>{backInfoPass.classList.add("active");const b=await decryptPassword(a.password);updateDados(a.appName,b,a.dateCreated,a.passwordStrength,a.useRandomNumbers,a.useCaseSensitive,a.useSpecialChars)}),c.appendChild(k),c.appendChild(l),d.appendChild(m),d.appendChild(g),d.appendChild(n),d.appendChild(e),b.appendChild(c),b.appendChild(d),listPasswordsContent.appendChild(b)})}const backInfoPass=document.querySelector(".back-info-pass"),closeBackInfoPass=document.querySelector(".close-dados-dialog");closeBackInfoPass.addEventListener("click",()=>{backInfoPass.classList.remove("active")});function updateDados(a,b,c,d,e,f,g){document.querySelector(".pass-set").textContent=b,document.querySelector(".appNameInfor").textContent=a,document.querySelector(".data-created").textContent=`Data de criação: ${c}`;const h=document.querySelector(".prog-security");updateSecurityBar(h,d),updateFeatureStatus(document.querySelector(".useRandomNumbers"),document.querySelector(".useRandomNumbersText"),document.querySelector(".useRandomNumbersIcon"),e),updateFeatureStatus(document.querySelector(".useCaseSensitive"),document.querySelector(".useCaseSensitiveText"),document.querySelector(".useCaseSensitiveIcon"),f),updateFeatureStatus(document.querySelector(".useSpecialChars"),document.querySelector(".useSpecialCharsText"),document.querySelector(".useSpecialCharsIcon"),g)}function updateFeatureStatus(a,b,c,d){b.textContent=d?"Sim":"N\xE3o",a.classList.toggle("true",d),a.classList.toggle("false",!d),c.classList.toggle("bi-check-circle-fill",d),c.classList.toggle("bi-exclamation-octagon",!d),c.classList.toggle("true",d),c.classList.toggle("false",!d)}async function displayPasswords(){listPasswordsContent.innerHTML="";let a=0,b=0,c=0;0>=savedPasswords.length?(notPasswords.style.display="flex",notFoundText.textContent="N\xE3o h\xE1 nada por aqui. Crie uma senha primeiramente."):notPasswords.style.display="none",savedPasswords.forEach(d=>{const e=document.createElement("div");e.classList.add("option-content-pass");const f=document.createElement("div");f.classList.add("one-area");const g=document.createElement("div");g.classList.add("rigth-area");const h=document.createElement("i");h.classList.add("bi","bi-clipboard");const i=document.createElement("div");i.classList.add("showpassio");const j=document.createElement("h6");j.classList.add("ts");const k=document.createElement("h4"),l=d.passwordStrength;k.textContent=l,k.classList.add("force-set");const m=document.createElement("div");m.classList.add("status-div"),"Forte"===l?(m.classList.add("strongest"),e.classList.add("strongest"),c++):"Fraca"===l?(m.classList.add("weak"),e.classList.add("weak"),a++):"M\xE9dia"===l&&(m.classList.add("medium"),e.classList.add("medium"),b++),i.appendChild(j),i.appendChild(k),i.appendChild(m);const n=document.createElement("i");n.classList.add("bi","bi-cloud-arrow-up"),n.addEventListener("click",async()=>{exportSinglePassword(d.password,d.appName,d.dateCreated,d.hash,d.useSpecialChars,d.useRandomNumbers,d.useCaseSensitive,d.passwordStrength)});const o=document.createElement("h3");o.classList.add("app-pass"),o.textContent=d.appName;const p=document.createElement("h4");p.classList.add("showpass"),p.textContent="Mostrar Senha",h.addEventListener("click",async()=>{const a=await decryptPassword(d.password);copyToClipboard(a),toast("Senha copiada com sucesso"),h.classList.add("bi-clipboard-check"),h.classList.remove("bi-clipboard"),setTimeout(()=>{h.classList.remove("bi-clipboard-check"),h.classList.add("bi-clipboard")},2e3)});const q=document.createElement("i");q.classList.add("bi","bi-trash3"),q.addEventListener("click",()=>{const a=savedPasswords.indexOf(d);savedPasswords.splice(a,1),localStorage.setItem("savedPasswords",JSON.stringify(savedPasswords)),toast("Senha deletada com sucesso!"),toastSaveChange()}),p.addEventListener("click",async()=>{backInfoPass.classList.add("active");const a=await decryptPassword(d.password);updateDados(d.appName,a,d.dateCreated,l,d.useRandomNumbers,d.useCaseSensitive,d.useSpecialChars)}),f.appendChild(n),f.appendChild(o),g.appendChild(p),g.appendChild(i),g.appendChild(q),g.appendChild(h),e.appendChild(f),e.appendChild(g),listPasswordsContent.appendChild(e)}),totalPasswords.textContent=`Total de senhas: ${savedPasswords.length}`,weakPasswords.textContent=`Senhas Fracas: ${a}`,mediumPasswords.textContent=`Senhas Médias: ${b}`,strongPasswords.textContent=`Senhas Fortes: ${c}`}function updateSecurityBar(a,b){a.classList.remove("weak","medium","strongest"),"Forte"===b?(a.classList.add("strongest"),a.style.width="100%"):"Fraca"===b?(a.classList.add("weak"),a.style.width="33%"):(a.classList.add("medium"),a.style.width="66%")}function calculatePasswordStrength(a,b,c,d){let e=0;12<=a.length?e+=2:8<=a.length&&(e+=1),b?e+=2:/[!@#$%^&*(),.?":{}|<>]/.test(a)&&(e+=1),c?e+=1:/\d/.test(a)&&(e+=1),d?e+=1:/[a-z]/.test(a)&&/[A-Z]/.test(a)&&(e+=1);const f=/[a-zA-Z]/.test(a),g=/\d/.test(a),h=/[!@#$%^&*(),.?":{}|<>]/.test(a);return f&&g&&h?e+=2:(f&&g||f&&h||g&&h)&&(e+=1),7<=e?"Forte":4<=e?"M\xE9dia":"Fraca"}const baseurl="https://app-npass.vercel.app/send-email";function toast(a){const b=document.querySelector(".back-toast"),c=document.querySelector(".text-toast");return b.classList.add("active"),c.textContent=a,void setTimeout(()=>{b.classList.add("animate__animated","animate__fadeOut"),setTimeout(()=>(b.classList.remove("active"),void b.classList.remove("animate__animated","animate__fadeOut")),1e3)},3e3)}function toastSaveChange(){const a=document.querySelector(".back-toastchange"),b=document.querySelector(".text-toast1").textContent="Para salvar as altera\xE7\xF5es, reinicie a pagina",c=document.querySelector(".bi-arrow-clockwise");return c.addEventListener("click",()=>{location.reload()}),void setTimeout(()=>{a.classList.add("active"),setTimeout(()=>{a.classList.add("animate__animated","animate__fadeOut"),setTimeout(()=>(a.classList.remove("active"),void a.classList.remove("animate__animated","animate__fadeOut")),1e3)},5e3)},4e3)}const showDialogToGetPasswordsBtn=document.querySelector(".receber-senhas"),closeDRS=document.querySelector(".close-dialog-get-pass"),dialogSetEmail=document.querySelector(".back-setemailuser"),sendEmailBtn=document.querySelector(".send-email");showDialogToGetPasswordsBtn.addEventListener("click",()=>{dialogSetEmail.classList.add("active")}),closeDRS.addEventListener("click",()=>{dialogSetEmail.classList.remove("active")}),sendEmailBtn.addEventListener("click",()=>{dialogSetEmail.classList.remove("active");const a=document.querySelector("#email-user").value;if(console.log(a),a){const b=JSON.parse(localStorage.getItem("savedPasswords")||[]);0<b.length?sendEmailWithPasswords(a,b):toast("Nenhuma senha para salvar")}else toast("Email Inv\xE1lido")}),document.querySelector(".export").addEventListener("click",exportPasswords),document.querySelector(".import").addEventListener("change",importPasswords),document.querySelector(".import-onepass").addEventListener("change",importSinglePassword),document.querySelector(".import-trigger").addEventListener("click",()=>{document.querySelector(".import").click()}),document.querySelector(".import-pass").addEventListener("click",()=>{document.querySelector(".import-onepass").click()});async function exportKey(a){const b=await crypto.subtle.exportKey("raw",a);return btoa(String.fromCharCode(...new Uint8Array(b)))}async function exportPasswords(){const a=JSON.parse(localStorage.getItem("savedPasswords"))||[],b=await getKey(),c=await exportKey(b),d=await encryptData({version:"1.0",passwords:a},b),e=new Blob([JSON.stringify({key:c,data:d})],{type:"application/octet-stream"});saveAs(e,"passwords.nps")}async function importKey(a){const b=Uint8Array.from(atob(a),a=>a.charCodeAt(0));return await crypto.subtle.importKey("raw",b,{name:"AES-GCM",length:256},!0,["encrypt","decrypt"])}async function importPasswords(a){const b=a.target.files[0];if(!b)return void console.error("Nenhum arquivo selecionado");const c=new FileReader;c.onload=async function(a){try{toast("Arquivo lido com sucesso");const b=JSON.parse(a.target.result),c=await importKey(b.key);console.log("Chave importada com sucesso");const d=await decryptData(b.data,c);if("1.0"!==d.version)throw console.error("Vers\xE3o de arquivo n\xE3o suportada"),new Error("Vers\xE3o de arquivo n\xE3o suportada");const e=d.passwords,f=JSON.parse(localStorage.getItem("savedPasswords"))||[];e.forEach(a=>{const b=f.find(b=>b.id===a.id);b?console.warn(`Senha com ID ${a.id} já existe e não será adicionada novamente.`):f.push(a)}),localStorage.setItem("savedPasswords",JSON.stringify(f)),toast("Senhas importadas com sucesso!"),toastSaveChange()}catch(a){console.error("Erro ao importar senhas: ",a),toast("Falha ao importar senhas: Arquivo imcompativel ou desatualizado")}},c.readAsText(b)}async function importSinglePassword(a){const b=a.target.files[0];if(!b)return void console.error("Nenhum arquivo selecionado");const c=new FileReader;c.onload=async function(a){try{toast("Arquivo lido com sucesso");const b=JSON.parse(a.target.result),c=await importKey(b.key);if(console.log(`Chave importada com sucesso`),"1.0"!==b.data.version)throw console.error("Vers\xE3o de arquivo n\xE3o suportada"),new Error("Vers\xE3o de arquivo n\xE3o suportada");const d={id:generateUniqueId(),password:b.data.password,appName:b.data.appName,dateCreated:b.data.dateCreated,hash:b.data.hash,useSpecialChars:b.data.useSpecialChars,useRandomNumbers:b.data.useRandomNumbers,useCaseSensitive:b.data.useCaseSensitive,passwordStrength:b.data.passwordStrength},e=JSON.parse(localStorage.getItem("savedPasswords"))||[];e.push(d),localStorage.setItem("savedPasswords",JSON.stringify(e)),toast(`Senha importada com sucesso!`),toastSaveChange()}catch(a){console.error("Erro ao importar senha: ",a),toast("Falha ao importar senha: Arquivo icompat\xEDvel ou desatualizado!")}},c.readAsText(b)}async function encryptData(a,b){const c=new TextEncoder().encode(JSON.stringify(a)),d=crypto.getRandomValues(new Uint8Array(12)),e=await crypto.subtle.encrypt({name:"AES-GCM",iv:d},b,c),f=new Uint8Array(e),g=new Uint8Array(d.byteLength+f.byteLength);return g.set(d,0),g.set(f,d.byteLength),btoa(String.fromCharCode(...g))}async function decryptData(a,b){const c=Uint8Array.from(atob(a),a=>a.charCodeAt(0)),d=c.slice(0,12),e=c.slice(12),f=await crypto.subtle.decrypt({name:"AES-GCM",iv:d},b,e);return JSON.parse(new TextDecoder().decode(f))}async function encryptPassword(a){const b=new TextEncoder().encode(a),c=await getKey(),d=crypto.getRandomValues(new Uint8Array(12)),e=await crypto.subtle.encrypt({name:"AES-GCM",iv:d},c,b);return{iv:btoa(String.fromCharCode(...d)),encrypted:btoa(String.fromCharCode(...new Uint8Array(e)))}}async function decryptPassword(a){const b=Uint8Array.from(atob(a.iv),a=>a.charCodeAt(0)),c=Uint8Array.from(atob(a.encrypted),a=>a.charCodeAt(0)),d=await getKey(),e=await crypto.subtle.decrypt({name:"AES-GCM",iv:b},d,c);return new TextDecoder().decode(e)}async function getKey(){const a=await crypto.subtle.importKey("raw",new TextEncoder().encode("some-unique-password"),{name:"PBKDF2"},!1,["deriveKey"]),b=await crypto.subtle.deriveKey({name:"PBKDF2",salt:new TextEncoder().encode("some-salt"),iterations:1e5,hash:"SHA-256"},a,{name:"AES-GCM",length:256},!0,["encrypt","decrypt"]);return b}const importArea=document.querySelector(".importfilecontent");["dragenter","dragover","dragleave","drop"].forEach(a=>{importArea.addEventListener(a,preventDefaults,!1)}),["dragenter","dragover"].forEach(a=>{importArea.addEventListener(a,()=>importArea.classList.add("dragover"))}),["dragleave","drop"].forEach(a=>{importArea.addEventListener(a,()=>importArea.classList.remove("dragover"),!1)}),importArea.addEventListener("drop",handleDrop,!1);function preventDefaults(a){a.preventDefault(),a.stopPropagation()}async function handleDrop(a){const b=a.dataTransfer.files;if(b.length=0)return;const c=b[0],d=c.name.toLowerCase();d.endsWith(".nps")?await importPasswordsFromFile(c):d.endsWith(".npsu")?await importSinglePasswordFromFile(c):toast("Formato de arquivo n\xE3o suportado!")}async function importPasswordsFromFile(a){const b=new FileReader;b.onload=async function(a){try{const b=JSON.parse(a.target.result),c=await importKey(b.key),d=await decryptData(b.data,c);if("1.0"!==d.version)throw new Error("Vers\xE3o de arquivo n\xE3o suportada");const e=JSON.parse(localStorage.getItem("savedPasswords"))||[],f=d.passwords,g=e.concat(f);localStorage.setItem("savedPasswords",JSON.stringify(g)),toast("Senhas importadas com sucesso!"),toastSaveChange()}catch(a){toast("Falha ao importar senhas: Arquivo N\xE3o Suportado ou Desatualizado!")}},b.readAsText(a)}async function importSinglePasswordFromFile(a){const b=new FileReader;b.onload=async function(a){try{const b=JSON.parse(a.target.result),c=await importKey(b.key);if("1.0"!==b.data.version)throw new Error("Vers\xE3o de arquivo n\xE3o suportada");const d=JSON.parse(localStorage.getItem("savedPasswords"))||[],e={id:generateUniqueId(),password:b.data.password,appName:b.data.appName,dateCreated:new Date().toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit",second:"2-digit"}),useSpecialChars:b.data.useSpecialChars,useRandomNumbers:b.data.useRandomNumbers,useCaseSensitive:b.data.useCaseSensitive,passwordStrength:b.data.passwordStrength};d.push(e),localStorage.setItem("savedPasswords",JSON.stringify(d)),toast("Senha importada com sucesso!"),toastSaveChange()}catch(a){toast("Falha ao importar senha: Arquivo n\xE3o suportado ou desatualizado!")}},b.readAsText(a)}async function sendEmailWithPasswords(a,b){const c=await Promise.all(b.map(async a=>{const b=await decryptPassword(a.password);return{...a,password:b}}));fetch(baseurl,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:a,passwords:c})}).then(a=>a.json()).then(a=>{"Email sent successfully."===a.message?toast("Email enviado com sucesso!"):toast("Erro ao enviar email.")}).catch(a=>{console.error("Error:",a),toast("Erro ao enviar email.")})}const showClearLocal=document.querySelector(".clear-cache"),dialogClearCache=document.querySelector(".back-dialog-clear");showClearLocal.addEventListener("click",()=>{dialogClearCache.classList.add("active")});const btnClearCache=document.querySelector(".confirm-dialog-clear-cache"),btnCancel=document.querySelector(".close-dialog-clear-cache");btnCancel.addEventListener("click",()=>{dialogClearCache.classList.remove("active")}),btnClearCache.addEventListener("click",()=>{dialogClearCache.classList.remove("active"),localStorage.removeItem("savedPasswords"),toast("Suas senhas foram deletadas com sucesso do seu navegador!")});const generatePassBtn=document.querySelector(".generatepassbtn"),savePassBtn=document.querySelector(".savepassbtn"),output=document.querySelector(".output"),textoutput=document.querySelector(".text-output"),copyPass=document.querySelector(".bi-clipboard");localStorage.getItem("password-output")&&(textoutput.textContent=`Senha atual gerada: ${localStorage.getItem("password-output")}`,output.classList.add("active"),copyPass.addEventListener("click",()=>{copyPass.classList.add("bi-clipboard-check"),copyPass.classList.remove("bi-clipboard");const a=textoutput.textContent;copyToClipboard(a),setTimeout(()=>{copyPass.classList.add("bi-clipboard"),copyPass.classList.remove("bi-clipboard-check")},4e3)}),setTimeout(()=>{output.classList.remove("active"),textoutput.textContent=""},5e4)),generatePassBtn.addEventListener("click",()=>{const a=parseInt(document.querySelector("#length-pass").value,10);return isNaN(a)||8>a?(toast("O n\xFAmero de caracteres deve ser pelo menos 8 para uma melhor seguran\xE7a!"),void loadingDialog.classList.remove("active")):25<a?(toast("N\xFAmero m\xE1ximo de caracteres atingido! Use menor do que 25 e maior do que 8!"),void loadingDialog.classList.remove("active")):void generatePassword(!1)}),savePassBtn.addEventListener("click",()=>{const a=parseInt(document.querySelector("#length-pass").value,10);return isNaN(a)||8>a?(toast("O n\xFAmero de caracteres deve ser pelo menos 8 para uma melhor seguran\xE7a!"),void loadingDialog.classList.remove("active")):25<a?(toast("N\xFAmero m\xE1ximo de caracteres atingido! Use menor do que 25 e maior do que 8!"),void loadingDialog.classList.remove("active")):void showDialog("newP")});function showDialog(a){const b=document.querySelector(".back-dialog-infor"),c=document.querySelector(".aviso-d"),d=document.querySelector(".title-dialog"),e=document.querySelector(".aviso"),f=document.querySelector(".close-dialog"),g=document.querySelector(".new-d"),h=document.querySelector("#name-app"),i=document.querySelector(".next-dialog"),j=document.querySelector(".close-dialog-create-pass");b.classList.add("active"),j.addEventListener("click",()=>{b.classList.remove("active")}),"alert"===a?(c.classList.add("active"),d.textContent="Aviso",e.textContent="Para garantir a seguran\xE7a de suas senhas, armazenamos seus dados criptografados localmente no navegador. Embora n\xE3o sejam enviados a servidores, \xE9 essencial manter seu dispositivo seguro e realizar backups peri\xF3dicos, pois a limpeza do cache ou a desinstala\xE7\xE3o do navegador podem resultar na perda de suas informa\xE7\xF5es. Nosso site assegura a prote\xE7\xE3o de suas informa\xE7\xF5es pessoais, mas n\xE3o nos responsabilizamos por infec\xE7\xF5es de v\xEDrus no seu dispositivo ou pela exclus\xE3o de dados devido \xE0 limpeza do cache ou desinstala\xE7\xE3o do navegador. Agradecemos por utilizar nosso site. Aproveite e guarde suas senhas de forma segura, evitando compartilh\xE1-las.",f.removeEventListener("click",handleCloseDialogClick),f.addEventListener("click",handleCloseDialogClick)):"newP"==a&&(g.classList.add("active"),i.removeEventListener("click",handleNextDialogClick),i.addEventListener("click",handleNextDialogClick))}function handleCloseDialogClick(){generatePassword();const a=document.querySelector(".back-dialog-infor"),b=document.querySelector(".aviso-d");a.classList.remove("active"),b.classList.remove("active")}function handleNextDialogClick(){const a=document.querySelector(".new-d"),b=document.querySelector(".aviso-d"),c=document.querySelector(".title-dialog"),d=document.querySelector(".aviso"),e=document.querySelector(".close-dialog"),f=document.querySelector("#name-app");a.classList.remove("active"),b.classList.add("active"),c.textContent="Aviso",d.textContent="Para garantir a seguran\xE7a de suas senhas, armazenamos seus dados criptografados localmente no navegador. Embora n\xE3o sejam enviados a servidores, \xE9 essencial manter seu dispositivo seguro e realizar backups peri\xF3dicos, pois a limpeza do cache ou a desinstala\xE7\xE3o do navegador podem resultar na perda de suas informa\xE7\xF5es. Nosso site assegura a prote\xE7\xE3o de suas informa\xE7\xF5es pessoais, mas n\xE3o nos responsabilizamos por infec\xE7\xF5es de v\xEDrus no seu dispositivo ou pela exclus\xE3o de dados devido \xE0 limpeza do cache ou desinstala\xE7\xE3o do navegador. Agradecemos por utilizar nosso site. Aproveite e guarde suas senhas de forma segura, evitando compartilh\xE1-las.",e.removeEventListener("click",handleCloseDialogNewPassword),e.addEventListener("click",handleCloseDialogNewPassword.bind(null,f.value||"[App Sem Nome]"))}function handleCloseDialogNewPassword(a){generatePassword(!0,a);const b=document.querySelector(".back-dialog-infor"),c=document.querySelector(".aviso-d");b.classList.remove("active"),c.classList.remove("active")}const settingsAdvancedBtn=document.querySelector(".settings-advanced"),settingsNormalBtn=document.querySelector(".settings-normal"),advancedContent=document.querySelector(".advanced-content"),useSpecialCharsSwicth=document.querySelector("#chk1"),useRandomNumbersSwitch=document.querySelector("#chk2"),useCaseSensitiveSwitch=document.querySelector("#chk3");settingsAdvancedBtn.addEventListener("click",()=>{advancedContent.classList.add("active"),settingsAdvancedBtn.classList.add("active"),settingsNormalBtn.classList.remove("active")}),settingsNormalBtn.addEventListener("click",()=>{useCaseSensitiveSwitch.checked=!1,useRandomNumbersSwitch.checked=!1,useSpecialCharsSwicth.checked=!1,advancedContent.classList.remove("active"),settingsAdvancedBtn.classList.remove("active"),settingsNormalBtn.classList.add("active")});function generatePassword(a=!1,b="Aplicativo Desconhecido"){function c(a,b,c){h.style.width=100*(a/5)+"%",g.textContent=b,setTimeout(c,1e3)}const d=document.querySelector("#name-user").value||"",e=parseInt(document.querySelector("#length-pass").value,10),f=document.querySelector(".loading-back"),g=document.querySelector(".loading-text"),h=document.querySelector(".progress");f.classList.add("active"),c(1,"Validando o n\xFAmero de caracteres..."),()=>isNaN(e)||8>e?(toast("O n\xFAmero de caracteres deve ser pelo menos 8 para uma melhor seguran\xE7a!"),void f.classList.remove("active")):25<e?(toast("N\xFAmero m\xE1ximo de caracteres atingido! Use menor do que 25 e maior do que 8!"),void f.classList.remove("active")):void 0,c(2,"Analisando escolhas de caracteres",()=>{const g=d.slice(0,3);let h,i,j,k="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";useSpecialCharsSwicth.checked?(k+="!@#$%^&*()_+{}:\"<>?|[];',./`~",h=!0):h=!1,useRandomNumbersSwitch.checked?(k+="0123456789",j=!0):j=!1,useCaseSensitiveSwitch.checked?i=!0:(k=k.toLowerCase(),i=!1),c(3,"Gerando sua senha do seu jeito :)",()=>{let d="";for(let a=0;a<e;a++)d+=k.charAt(Math.floor(Math.random()*k.length));const l=g+d;localStorage.setItem("password-output",l),output.classList.add("active"),textoutput.textContent=`Sua senha gerada: ${l}`,copyPass.addEventListener("click",()=>{copyPass.classList.add("bi-clipboard-check"),copyPass.classList.remove("bi-clipboard"),copyToClipboard(l),setTimeout(()=>{copyPass.classList.add("bi-clipboard"),copyPass.classList.remove("bi-clipboard-check")},4e3)}),setTimeout(()=>{output.classList.remove("active"),textoutput.textContent=""},5e4),c(4,"Calculando a seguran\xE7a da senha...",()=>{const d=calculatePasswordStrength(l,h,j,i);if(a?(toast("Erro ao gerar senha"),f.classList.remove("active")):(toast(`Senha Gerada: ${l} (Segurança: ${d})`),setTimeout(()=>{f.classList.remove("active")},2e3)),a){c(5,"Salvando sua senha...");const a={id:generateUniqueId(),password:l,appName:b,dateCreated:new Date().toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit",second:"2-digit"}),useSpecialChars:h,useRandomNumbers:j,useCaseSensitive:i,passwordStrength:d};hashPassword(l).then(b=>{a.hash=b,savePasswordData(a),toast(`Senha salva no seu navegador! Segurança da senha: ${d}`),f.classList.remove("active"),toastSaveChange()})}else f.classList.remove("active")})})})}async function hashPassword(a){const b=new TextEncoder().encode(a),c=await crypto.subtle.digest("SHA-256",b),d=Array.from(new Uint8Array(c)),e=d.map(a=>a.toString(16).padStart(2,"0")).join("");return e}async function savePasswordData(a){const b=JSON.parse(localStorage.getItem("savedPasswords"))||[],c=await encryptPassword(a.password);a.password=c,b.push(a),localStorage.setItem("savedPasswords",JSON.stringify(b))}function copyToClipboard(a){if(navigator.clipboard)navigator.clipboard.writeText(a).then(()=>{toast("Senha copiada com sucesso!")}).catch(a=>{console.error("Erro ao copiar a senha: ",a),toast("Erro ao copiar a senha")});else{const b=document.querySelector("#hidden-password-input");b.value=a,b.select(),document.execCommand("copy"),b.blur(),toast("Senha copiada com sucesso!")}}function generateUniqueId(){return"id-"+new Date().getTime()+"-"+Math.floor(1e4*Math.random())}displayPasswords();
+//Cookies
+const sidebar = document.querySelector(".side-bar");
+const btnCookies = document.querySelector(".close-bottom-cookies");
+const dialogCookies = document.querySelector(".back-container-bottom-cookies");
+sidebar.style.display = "none";
+
+if (localStorage.getItem("cookies") === "enabled") {
+  sidebar.style.display = "block";
+  dialogCookies.style.display = "none";
+}
+
+btnCookies.addEventListener("click", () => {
+  localStorage.setItem("cookies", "enabled");
+  dialogCookies.style.display = "none";
+  sidebar.style.display = "block";
+});
+
+//sidebar
+const btnShowSidebar = document.querySelector(".toggle-sidebar");
+const backSideBar = document.querySelector(".back-sidebar");
+const itensSideBar = document.querySelectorAll(".options-side-bar");
+
+backSideBar.addEventListener("click", () => {
+  sidebar.classList.remove("active");
+  backSideBar.classList.remove("active");
+});
+
+btnShowSidebar.addEventListener("click", () => {
+  sidebar.classList.toggle("active");
+  backSideBar.classList.toggle("active");
+});
+
+const generatePassSection = document.querySelector(".generatePassSection");
+const listPasswordsSection = document.querySelector(".list-passwords-content");
+const listPasswordsContent = document.querySelector(".list-pass-area");
+
+const savedPasswords = JSON.parse(localStorage.getItem("savedPasswords")) || [];
+let currentPage = 1;
+const itemsPerPage = 5;
+let totalPages = 0;
+let currentPasswords = [];
+
+itensSideBar.forEach((item) => {
+  item.addEventListener("click", () => {
+    itensSideBar.forEach((i) => i.classList.remove("active"));
+    item.classList.add("active");
+    sidebar.classList.remove("active");
+    const section = item.getAttribute("data-section");
+    if (section === "generatePass") {
+      generatePassSection.style.display = "block";
+      listPasswordsSection.style.display = "none";
+      clearPasswordSelection();
+    } else if (section === "listPasswords") {
+      generatePassSection.style.display = "none";
+      listPasswordsSection.style.display = "block";
+    }
+  });
+});
+
+const mainItem = document.querySelector(
+  ".options-side-bar[data-section='generatePass']"
+);
+mainItem.classList.add("active");
+
+generatePassSection.style.display = "block";
+listPasswordsSection.style.display = "none";
+
+//Exportar senhas função
+async function exportSinglePassword(
+  password,
+  appName,
+  dateCreated,
+  hash,
+  useSpecialChars,
+  useRandomNumbers,
+  useCaseSensitive,
+  strength
+) {
+  const key = await getKey();
+  const keyString = await exportKey(key);
+
+  const data = {
+    version: "1.0",
+    appName: appName,
+    password: password,
+    dateCreated:
+      "Arquivo exportado em: " +
+      new Date().toLocaleString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      }) +
+      "Data de criação: " +
+      dateCreated,
+    hash: hash,
+    useSpecialChars: useSpecialChars,
+    useRandomNumbers: useRandomNumbers,
+    useCaseSensitive: useCaseSensitive,
+    passwordStrength: strength,
+  };
+
+  const blob = new Blob([JSON.stringify({ key: keyString, data: data })], {
+    type: "application/octet-stream",
+  });
+  saveAs(blob, `${appName}.npsu`);
+}
+
+//lista de senhas
+const totalPasswords = document.querySelector("#list-length");
+const weakPasswords = document.querySelector("#pass-weak");
+const mediumPasswords = document.querySelector("#pass-medium");
+const strongPasswords = document.querySelector("#pass-strong");
+const notPasswords = document.querySelector(".not-passwords");
+const notFoundText = document.querySelector(".not-found-text");
+
+let weakCount = 0;
+let mediumCount = 0;
+let strongCount = 0;
+
+//Filtragem de senhas
+//interação
+
+const bgOptionsFilter = document.querySelector(".bg-dropfilter");
+const showbgOptionsFilter = document.querySelector(".back-options");
+const closebgOptionsFilter = document.querySelector(".closeOptsFilter");
+
+showbgOptionsFilter.addEventListener("click", () => {
+  bgOptionsFilter.classList.add("active");
+});
+
+closebgOptionsFilter.addEventListener("click", () => {
+  bgOptionsFilter.classList.remove("active");
+});
+
+const typeFilterContainer = document.querySelector(".bf");
+
+const previousBtn = document.querySelector(".previous");
+const nextBtn = document.querySelector(".next");
+
+let modeselect = false;
+
+const selectsPasswordsBg = document.querySelector(".back-mode-select");
+
+//dialogpass
+
+const backInfoPass = document.querySelector(".back-info-pass");
+const closeBackInfoPass = document.querySelector(".close-dados-dialog");
+
+closeBackInfoPass.addEventListener("click", () => {
+  backInfoPass.classList.remove("active");
+});
+//function updateDados
+function updateDados(
+  appName,
+  password,
+  passDataCreate,
+  progSecurity,
+  useRandomNumbers,
+  useCaseSensitive,
+  useSpecialChars
+) {
+  document.querySelector(".pass-set").textContent = password;
+  document.querySelector(".appNameInfor").textContent = appName;
+  document.querySelector(
+    ".data-created"
+  ).textContent = `Data de criação: ${passDataCreate}`;
+
+  const progSecurityBar = document.querySelector(".prog-security");
+  updateSecurityBar(progSecurityBar, progSecurity);
+
+  updateFeatureStatus(
+    document.querySelector(".useRandomNumbers"),
+    document.querySelector(".useRandomNumbersText"),
+    document.querySelector(".useRandomNumbersIcon"),
+    useRandomNumbers
+  );
+
+  updateFeatureStatus(
+    document.querySelector(".useCaseSensitive"),
+    document.querySelector(".useCaseSensitiveText"),
+    document.querySelector(".useCaseSensitiveIcon"),
+    useCaseSensitive
+  );
+
+  updateFeatureStatus(
+    document.querySelector(".useSpecialChars"),
+    document.querySelector(".useSpecialCharsText"),
+    document.querySelector(".useSpecialCharsIcon"),
+    useSpecialChars
+  );
+}
+
+function updateFeatureStatus(element, textElement, iconElement, status) {
+  textElement.textContent = status ? "Sim" : "Não";
+  element.classList.toggle("true", status);
+  element.classList.toggle("false", !status);
+  iconElement.classList.toggle("bi-check-circle-fill", status);
+  iconElement.classList.toggle("bi-exclamation-octagon", !status);
+  iconElement.classList.toggle("true", status);
+  iconElement.classList.toggle("false", !status);
+}
+
+//shhow pass
+
+async function displayPasswords(passwords = currentPasswords) {
+  listPasswordsContent.innerHTML = "";
+  let weakCount = 0;
+  let mediumCount = 0;
+  let strongCount = 0;
+
+  totalPages = Math.ceil(passwords.length / itemsPerPage);
+
+  if (passwords.length <= 0) {
+    notPasswords.style.display = "flex";
+    notFoundText.textContent = "Não há nada por aqui.";
+  } else {
+    notPasswords.style.display = "none";
+  }
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const passwordsToDisplay = passwords.slice(startIndex, endIndex);
+
+  passwordsToDisplay.forEach((passwordData, index) => {
+    const optionContentPass = document.createElement("div");
+    optionContentPass.classList.add("option-content-pass");
+    optionContentPass.setAttribute("data-id", passwordData.id || index);
+
+    optionContentPass.addEventListener("dblclick", () => {
+      modeselect = true;
+    });
+
+    optionContentPass.addEventListener("click", () => {
+      if (modeselect) {
+        togglePasswordsSelection(optionContentPass.getAttribute("data-id"));
+      }
+    });
+
+    const oneArea = document.createElement("div");
+    oneArea.classList.add("one-area");
+
+    const rigthArea = document.createElement("div");
+    rigthArea.classList.add("rigth-area");
+
+    const copyPassList = document.createElement("i");
+    copyPassList.classList.add("bi", "bi-clipboard");
+
+    const forceValueArea = document.createElement("div");
+    forceValueArea.classList.add("showpassio");
+
+    const forceOcultMob = document.createElement("h6");
+    forceOcultMob.classList.add("ts");
+
+    const forceValueText = document.createElement("h4");
+    const strength = passwordData.passwordStrength;
+    forceValueText.textContent = strength;
+    forceValueText.classList.add("force-set");
+
+    const forceValueStatus = document.createElement("div");
+    forceValueStatus.classList.add("status-div");
+
+    if (strength === "Forte") {
+      forceValueStatus.classList.add("strongest");
+      optionContentPass.classList.add("strongest");
+      strongCount++;
+    } else if (strength === "Fraca") {
+      forceValueStatus.classList.add("weak");
+      optionContentPass.classList.add("weak");
+      weakCount++;
+    } else if (strength === "Média") {
+      forceValueStatus.classList.add("medium");
+      optionContentPass.classList.add("medium");
+      mediumCount++;
+    }
+
+    forceValueArea.appendChild(forceOcultMob);
+    forceValueArea.appendChild(forceValueText);
+    forceValueArea.appendChild(forceValueStatus);
+
+    const iconCloud = document.createElement("i");
+    iconCloud.classList.add("bi", "bi-cloud-arrow-up");
+    iconCloud.addEventListener("click", async () => {
+      exportSinglePassword(
+        passwordData.password,
+        passwordData.appName,
+        passwordData.dateCreated,
+        passwordData.hash,
+        passwordData.useSpecialChars,
+        passwordData.useRandomNumbers,
+        passwordData.useCaseSensitive,
+        passwordData.passwordStrength
+      );
+    });
+
+    const appName = document.createElement("h3");
+    appName.classList.add("app-pass");
+    appName.textContent = passwordData.appName;
+
+    const showPass = document.createElement("h4");
+    showPass.classList.add("showpass");
+    showPass.textContent = "Mostrar Senha";
+
+    copyPassList.addEventListener("click", async () => {
+      const decryptedPassword = await decryptPassword(passwordData.password);
+      copyToClipboard(decryptedPassword);
+      toast("Senha copiada com sucesso");
+      copyPassList.classList.add("bi-clipboard-check");
+      copyPassList.classList.remove("bi-clipboard");
+      setTimeout(() => {
+        copyPassList.classList.remove("bi-clipboard-check");
+        copyPassList.classList.add("bi-clipboard");
+      }, 2000);
+    });
+
+    const iconDelete = document.createElement("i");
+    iconDelete.classList.add("bi", "bi-trash3");
+    iconDelete.addEventListener("click", () => {
+      const index = savedPasswords.indexOf(passwordData);
+      savedPasswords.splice(index, 1);
+      localStorage.setItem("savedPasswords", JSON.stringify(savedPasswords));
+      toast("Senha deletada com sucesso!");
+      displayPasswords();
+    });
+
+    showPass.addEventListener("click", async () => {
+      backInfoPass.classList.add("active");
+      const decryptedPassword = await decryptPassword(passwordData.password);
+      updateDados(
+        passwordData.appName,
+        decryptedPassword,
+        passwordData.dateCreated,
+        strength,
+        passwordData.useRandomNumbers,
+        passwordData.useCaseSensitive,
+        passwordData.useSpecialChars
+      );
+    });
+
+    oneArea.appendChild(iconCloud);
+    oneArea.appendChild(appName);
+
+    rigthArea.appendChild(showPass);
+    rigthArea.appendChild(forceValueArea);
+    rigthArea.appendChild(iconDelete);
+    rigthArea.appendChild(copyPassList);
+
+    optionContentPass.appendChild(oneArea);
+    optionContentPass.appendChild(rigthArea);
+
+    listPasswordsContent.appendChild(optionContentPass);
+  });
+
+  totalPasswords.textContent = `Total de senhas: ${passwords.length}`;
+  weakPasswords.textContent = `Senhas Fracas: ${weakCount}`;
+  mediumPasswords.textContent = `Senhas Médias: ${mediumCount}`;
+  strongPasswords.textContent = `Senhas Fortes: ${strongCount}`;
+  updatePaginationButtons();
+}
+
+function updateSecurityBar(progSecurityBar, progSecurity) {
+  progSecurityBar.classList.remove("weak", "medium", "strongest");
+
+  if (progSecurity === "Forte") {
+    progSecurityBar.classList.add("strongest");
+    progSecurityBar.style.width = "100%";
+  } else if (progSecurity === "Fraca") {
+    progSecurityBar.classList.add("weak");
+    progSecurityBar.style.width = "33%";
+  } else {
+    progSecurityBar.classList.add("medium");
+    progSecurityBar.style.width = "66%";
+  }
+}
+
+function goToNextPage() {
+  if (currentPage < totalPages) {
+    currentPage++;
+    displayPasswords(currentPasswords);
+  }
+}
+
+function goToPreviousPage() {
+  if (currentPage > 1) {
+    currentPage--;
+    displayPasswords(currentPasswords);
+  }
+}
+
+previousBtn.addEventListener("click", () => {
+  goToPreviousPage();
+});
+
+nextBtn.addEventListener("click", () => {
+  goToNextPage();
+});
+
+function updatePaginationButtons() {
+  previousBtn.disabled = currentPage === 1;
+  nextBtn.disabled = currentPage === totalPages || savedPasswords.length === 0;
+}
+
+//exibição de senhas (todas, filtros, por pesquisas)
+
+//todas as senhas
+async function showAllPasswords() {
+  currentPasswords = savedPasswords;
+  currentPage = 1;
+  displayPasswords(currentPasswords);
+}
+
+//Sistema de busca de senhas e filtros
+
+const searchInput = document.getElementById("search-input");
+
+let searchTimeout;
+let originalPasswords = savedPasswords;
+let filterActive = false;
+
+let activeFilters = [];
+let activeStrengthFilter = null;
+let filteredPasswords = currentPasswords;
+
+document.querySelectorAll(".options-drop").forEach((item) => {
+  item.addEventListener("click", (event) => {
+    const filter = event.currentTarget.getAttribute("data-filter");
+    bgOptionsFilter.classList.remove("active");
+    notPasswords.style.display = "none";
+    clearPasswordSelection();
+
+    if (
+      ["Senhas-Faceis", "Senhas-Medias", "Senhas-Dificeis"].includes(filter)
+    ) {
+      if (activeStrengthFilter) {
+        activeFilters = activeFilters.filter(
+          (activeFilter) => activeFilter !== activeStrengthFilter
+        );
+        removeFilterElement(activeStrengthFilter);
+      }
+      activeStrengthFilter = filter;
+    }
+    if (activeFilters.includes(filter)) {
+      return;
+    }
+    activeFilters.push(filter);
+    filterPasswords(filter);
+    createFilterElement(filter);
+  });
+});
+
+function createFilterElement(filter) {
+  const outputfilter = document.createElement("div");
+  outputfilter.classList.add("output-filter");
+  outputfilter.setAttribute("data-filter", filter);
+
+  const outputfilterText = document.createElement("h5");
+  outputfilterText.textContent = filter;
+
+  const outputfilterRemove = document.createElement("i");
+  outputfilterRemove.classList.add("bi", "bi-x");
+
+  outputfilter.appendChild(outputfilterText);
+  outputfilter.appendChild(outputfilterRemove);
+  typeFilterContainer.appendChild(outputfilter);
+
+  outputfilterRemove.addEventListener("click", () => {
+    activeFilters = activeFilters.filter(
+      (activeFilter) => activeFilter !== filter
+    );
+    if (activeStrengthFilter === filter) {
+      activeStrengthFilter = null;
+    }
+    typeFilterContainer.removeChild(outputfilter);
+
+    if (activeFilters.length > 0) {
+      filterPasswords(null, true);
+    } else {
+      notPasswords.style.display = "none";
+      filterActive = false;
+      showAllPasswords();
+    }
+  });
+}
+
+function removeFilterElement(filter) {
+  const filterElement = document.querySelector(
+    `.output-filter[data-filter="${filter}"]`
+  );
+  if (filterElement) {
+    filterElement.querySelector("i").click();
+  }
+}
+
+function filterPasswords(criteria, reapply = false) {
+  if (!reapply) {
+    if (!activeFilters.includes(criteria)) {
+      activeFilters.push(criteria);
+    }
+  }
+
+  filteredPasswords = savedPasswords.filter((passwordData) => {
+    return activeFilters.every((filter) => {
+      if (filter === "Senhas-Faceis") {
+        return passwordData.passwordStrength === "Fraca";
+      } else if (filter === "Senhas-Medias") {
+        return passwordData.passwordStrength === "Média";
+      } else if (filter === "Senhas-Dificeis") {
+        return passwordData.passwordStrength === "Forte";
+      } else if (filter === "Recentes") {
+        return true; // Sorting will be handled separately
+      } else if (filter === "Antigas") {
+        return true; // Sorting will be handled separately
+      }
+      return false;
+    });
+  });
+
+  if (activeFilters.includes("Recentes")) {
+    filteredPasswords.sort(
+      (a, b) => new Date(b.dateCreated) - new Date(a.dateCreated)
+    );
+  } else if (activeFilters.includes("Antigas")) {
+    filteredPasswords.sort(
+      (a, b) => new Date(a.dateCreated) - new Date(b.dateCreated)
+    );
+  }
+
+  currentPasswords = filteredPasswords;
+  currentPage = 1;
+  filterActive = activeFilters.length > 0;
+  if (!filterActive) {
+    displayPasswords(filteredPasswords);
+  } else {
+    searchPasswords(searchInput.value);
+  }
+}
+
+searchInput.addEventListener("input", function () {
+  const searchTerm = this.value.toLowerCase();
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    searchPasswords(searchTerm);
+  }, 300);
+});
+
+function searchPasswords(query) {
+  if (query === "") {
+    currentPasswords = filterActive ? filteredPasswords : savedPasswords;
+    displayPasswords(currentPasswords);
+  } else {
+    const searchTarget = filterActive ? filteredPasswords : savedPasswords;
+    currentPasswords = searchTarget.filter((passwordData) => {
+      const appNameString = String(passwordData.appName).toLowerCase();
+      return appNameString.includes(query.toLowerCase());
+    });
+    displayPasswords(currentPasswords);
+  }
+  currentPage = 1;
+}
+
+function calculatePasswordStrength(
+  password,
+  useSpecialChars,
+  useRandomNumbers,
+  useCaseSensitive
+) {
+  let strength = 0;
+
+  // Comprimento da senha
+  if (password.length >= 12) {
+    strength += 2;
+  } else if (password.length >= 8) {
+    strength += 1;
+  }
+
+  // Caracteres especiais
+  if (useSpecialChars) {
+    strength += 2;
+  } else if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    strength += 1;
+  }
+
+  // Números
+  if (useRandomNumbers) {
+    strength += 1;
+  } else if (/\d/.test(password)) {
+    strength += 1;
+  }
+
+  // Letras maiúsculas e minúsculas
+  if (useCaseSensitive) {
+    strength += 1;
+  } else if (/[a-z]/.test(password) && /[A-Z]/.test(password)) {
+    strength += 1;
+  }
+
+  // Diversidade de caracteres
+  const hasLetters = /[a-zA-Z]/.test(password);
+  const hasNumbers = /\d/.test(password);
+  const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+  if (hasLetters && hasNumbers && hasSpecial) {
+    strength += 2;
+  } else if (
+    (hasLetters && hasNumbers) ||
+    (hasLetters && hasSpecial) ||
+    (hasNumbers && hasSpecial)
+  ) {
+    strength += 1;
+  }
+
+  if (strength >= 7) {
+    return "Forte";
+  } else if (strength >= 4) {
+    return "Média";
+  } else {
+    return "Fraca";
+  }
+}
+
+//mode selectpasswords
+const numberPasswordSelect = document.querySelector(".number-passwordSelect");
+let selectedPasswords = [];
+
+//funções necessárias
+
+document.querySelector(".closeModeSelect").addEventListener("click", () => {
+  clearPasswordSelection();
+});
+
+document
+  .querySelector(".deletePasswordsSelects")
+  .addEventListener("click", () => {
+    deleteSelectedPasswords();
+  });
+
+document
+  .querySelector(".exportsPasswordsSelects")
+  .addEventListener("click", () => {
+    exportSelectedPasswords();
+  });
+
+function updatePasswordSelection() {
+  if (selectedPasswords.length > 0) {
+    selectsPasswordsBg.classList.add("active");
+    numberPasswordSelect.textContent = `${selectedPasswords.length}/${savedPasswords.length} Senhas Selecionadas`;
+  } else {
+    selectsPasswordsBg.classList.remove("active");
+  }
+}
+
+function togglePasswordsSelection(passwordId) {
+  const passwordItem = document.querySelector(
+    `.option-content-pass[data-id='${passwordId}']`
+  );
+
+  if (passwordItem.classList.contains("active")) {
+    passwordItem.classList.remove("active");
+    selectedPasswords = selectedPasswords.filter((id) => id !== passwordId);
+  } else {
+    passwordItem.classList.add("active");
+    selectedPasswords.push(passwordId);
+  }
+  updatePasswordSelection();
+}
+
+function clearPasswordSelection() {
+  selectedPasswords = [];
+  document.querySelectorAll(".option-content-pass").forEach((passwordItem) => {
+    passwordItem.classList.remove("active");
+  });
+  updatePasswordSelection();
+  modeselect = false;
+}
+
+function deleteSelectedPasswords() {
+  let savedPasswords = JSON.parse(localStorage.getItem("savedPasswords")) || [];
+
+  selectedPasswords.forEach((passwordId) => {
+    const index = savedPasswords.findIndex(
+      (passwordData) => passwordData.id === passwordId
+    );
+    if (index > -1) {
+      savedPasswords.splice(index, 1);
+    }
+  });
+
+  localStorage.setItem("savedPasswords", JSON.stringify(savedPasswords));
+  toast(`${selectedPasswords.length} Senhas deletadas com sucesso!`);
+  toastSaveChange();
+  clearPasswordSelection();
+}
+
+async function exportSelectedPasswords() {
+  const savedPasswords =
+    JSON.parse(localStorage.getItem("savedPasswords")) || [];
+  const passwordsToExport = savedPasswords.filter((passwordData) =>
+    selectedPasswords.includes(passwordData.id)
+  );
+
+  const key = await getKey();
+  const keyString = await exportKey(key);
+  const data = {
+    version: "1.0",
+    passwords: passwordsToExport,
+  };
+  const encryptedData = await encryptData(data, key);
+  const blob = new Blob(
+    [JSON.stringify({ key: keyString, data: encryptedData })],
+    { type: "application/octet-stream" }
+  );
+
+  saveAs(blob, "selected_passwords.nps");
+  clearPasswordSelection();
+}
+
+const baseurl = "https://app-npass.vercel.app/send-email";
+
+function toast(message) {
+  const toastBack = document.querySelector(".back-toast");
+  const textToast = document.querySelector(".text-toast");
+  toastBack.classList.add("active");
+  textToast.textContent = message;
+  setTimeout(() => {
+    toastBack.classList.add("animate__animated", "animate__fadeOut");
+    setTimeout(() => {
+      toastBack.classList.remove("active");
+      toastBack.classList.remove("animate__animated", "animate__fadeOut");
+      return;
+    }, 1000);
+  }, 3000);
+  return;
+}
+function toastSaveChange() {
+  const toastBack = document.querySelector(".back-toastchange");
+  const textToast = (document.querySelector(".text-toast1").textContent =
+    "Para salvar as alterações, reinicie a pagina");
+  const iconReload = document.querySelector(".bi-arrow-clockwise");
+  iconReload.addEventListener("click", () => {
+    location.reload();
+  });
+  setTimeout(() => {
+    toastBack.classList.add("active");
+    setTimeout(() => {
+      toastBack.classList.add("animate__animated", "animate__fadeOut");
+      setTimeout(() => {
+        toastBack.classList.remove("active");
+        toastBack.classList.remove("animate__animated", "animate__fadeOut");
+        return;
+      }, 1000);
+    }, 5000);
+  }, 4000);
+  return;
+}
+
+const showDialogToGetPasswordsBtn = document.querySelector(".receber-senhas");
+const closeDRS = document.querySelector(".close-dialog-get-pass");
+const dialogSetEmail = document.querySelector(".back-setemailuser");
+const sendEmailBtn = document.querySelector(".send-email");
+
+showDialogToGetPasswordsBtn.addEventListener("click", () => {
+  dialogSetEmail.classList.add("active");
+});
+closeDRS.addEventListener("click", () => {
+  dialogSetEmail.classList.remove("active");
+});
+
+sendEmailBtn.addEventListener("click", () => {
+  dialogSetEmail.classList.remove("active");
+  const emailInput = document.querySelector("#email-user").value;
+  console.log(emailInput);
+  if (emailInput) {
+    const savedPasswords = JSON.parse(
+      localStorage.getItem("savedPasswords") || []
+    );
+    if (savedPasswords.length > 0) {
+      sendEmailWithPasswords(emailInput, savedPasswords);
+    } else {
+      toast("Nenhuma senha para salvar");
+    }
+  } else {
+    toast("Email Inválido");
+  }
+});
+
+document.querySelector(".export").addEventListener("click", exportPasswords);
+document.querySelector(".import").addEventListener("change", importPasswords);
+document
+  .querySelector(".import-onepass")
+  .addEventListener("change", importSinglePassword);
+document.querySelector(".import-trigger").addEventListener("click", () => {
+  document.querySelector(".import").click();
+});
+document.querySelector(".import-pass").addEventListener("click", () => {
+  document.querySelector(".import-onepass").click();
+});
+
+async function exportKey(key) {
+  const exported = await crypto.subtle.exportKey("raw", key);
+  return btoa(String.fromCharCode(...new Uint8Array(exported)));
+}
+
+async function exportPasswords() {
+  const passwords = JSON.parse(localStorage.getItem("savedPasswords")) || [];
+  const key = await getKey();
+  const keyString = await exportKey(key);
+  const data = {
+    version: "1.0",
+    passwords: passwords,
+  };
+  const encryptedData = await encryptData(data, key);
+  const blob = new Blob(
+    [JSON.stringify({ key: keyString, data: encryptedData })],
+    { type: "application/octet-stream" }
+  );
+
+  saveAs(blob, "passwords.nps");
+}
+
+async function importKey(keyString) {
+  const rawKey = Uint8Array.from(atob(keyString), (c) => c.charCodeAt(0));
+  return await crypto.subtle.importKey(
+    "raw",
+    rawKey,
+    { name: "AES-GCM", length: 256 },
+    true,
+    ["encrypt", "decrypt"]
+  );
+}
+
+async function importPasswords(event) {
+  const file = event.target.files[0];
+  if (!file) {
+    console.error("Nenhum arquivo selecionado");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = async function (e) {
+    try {
+      toast("Arquivo lido com sucesso");
+      const fileContent = JSON.parse(e.target.result);
+      const key = await importKey(fileContent.key);
+      console.log("Chave importada com sucesso");
+      const decryptedData = await decryptData(fileContent.data, key);
+      if (decryptedData.version !== "1.0") {
+        console.error("Versão de arquivo não suportada");
+        throw new Error("Versão de arquivo não suportada");
+      }
+
+      const newPasswords = decryptedData.passwords;
+      const savedPasswords =
+        JSON.parse(localStorage.getItem("savedPasswords")) || [];
+      newPasswords.forEach((newPassword) => {
+        const existingPassword = savedPasswords.find(
+          (password) => password.id === newPassword.id
+        );
+        if (!existingPassword) {
+          savedPasswords.push(newPassword);
+        } else {
+          console.warn(
+            `Senha com ID ${newPassword.id} já existe e não será adicionada novamente.`
+          );
+        }
+      });
+
+      localStorage.setItem("savedPasswords", JSON.stringify(savedPasswords));
+      toast("Senhas importadas com sucesso!");
+      toastSaveChange();
+    } catch (err) {
+      console.error("Erro ao importar senhas: ", err);
+      toast("Falha ao importar senhas: Arquivo imcompativel ou desatualizado");
+    }
+  };
+  reader.readAsText(file);
+}
+
+//Importar uma unica senha
+
+async function importSinglePassword(event) {
+  const file = event.target.files[0];
+  if (!file) {
+    console.error("Nenhum arquivo selecionado");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = async function (e) {
+    try {
+      toast("Arquivo lido com sucesso");
+      const fileContent = JSON.parse(e.target.result);
+      const key = await importKey(fileContent.key);
+      console.log(`Chave importada com sucesso`);
+      if (fileContent.data.version !== "1.0") {
+        console.error("Versão de arquivo não suportada");
+        throw new Error("Versão de arquivo não suportada");
+      }
+
+      const passwordData = {
+        id: generateUniqueId(),
+        password: fileContent.data.password,
+        appName: fileContent.data.appName,
+        dateCreated: fileContent.data.dateCreated,
+        hash: fileContent.data.hash,
+        useSpecialChars: fileContent.data.useSpecialChars,
+        useRandomNumbers: fileContent.data.useRandomNumbers,
+        useCaseSensitive: fileContent.data.useCaseSensitive,
+        passwordStrength: fileContent.data.passwordStrength,
+      };
+
+      const savedPasswords =
+        JSON.parse(localStorage.getItem("savedPasswords")) || [];
+      savedPasswords.push(passwordData);
+      localStorage.setItem("savedPasswords", JSON.stringify(savedPasswords));
+      toast(`Senha importada com sucesso!`);
+      toastSaveChange();
+    } catch (err) {
+      console.error("Erro ao importar senha: ", err);
+      toast("Falha ao importar senha: Arquivo icompatível ou desatualizado!");
+    }
+  };
+  reader.readAsText(file);
+}
+
+async function encryptData(data, key) {
+  const encodedData = new TextEncoder().encode(JSON.stringify(data));
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const encrypted = await crypto.subtle.encrypt(
+    {
+      name: "AES-GCM",
+      iv: iv,
+    },
+    key,
+    encodedData
+  );
+  const buffer = new Uint8Array(encrypted);
+  const encryptedArray = new Uint8Array(iv.byteLength + buffer.byteLength);
+  encryptedArray.set(iv, 0);
+  encryptedArray.set(buffer, iv.byteLength);
+  return btoa(String.fromCharCode(...encryptedArray));
+}
+
+async function decryptData(encryptedData, key) {
+  const encryptedArray = Uint8Array.from(atob(encryptedData), (c) =>
+    c.charCodeAt(0)
+  );
+  const iv = encryptedArray.slice(0, 12);
+  const data = encryptedArray.slice(12);
+  const decrypted = await crypto.subtle.decrypt(
+    {
+      name: "AES-GCM",
+      iv: iv,
+    },
+    key,
+    data
+  );
+  return JSON.parse(new TextDecoder().decode(decrypted));
+}
+
+async function encryptPassword(password) {
+  const passwordBytes = new TextEncoder().encode(password);
+  const key = await getKey();
+  const iv = crypto.getRandomValues(new Uint8Array(12)); // GCM nonce/IV
+  const encryptedPassword = await crypto.subtle.encrypt(
+    { name: "AES-GCM", iv: iv },
+    key,
+    passwordBytes
+  );
+  return {
+    iv: btoa(String.fromCharCode(...iv)),
+    encrypted: btoa(String.fromCharCode(...new Uint8Array(encryptedPassword))),
+  };
+}
+
+async function decryptPassword(encryptedData) {
+  const iv = Uint8Array.from(atob(encryptedData.iv), (c) => c.charCodeAt(0));
+  const encrypted = Uint8Array.from(atob(encryptedData.encrypted), (c) =>
+    c.charCodeAt(0)
+  );
+  const key = await getKey();
+  const decrypted = await crypto.subtle.decrypt(
+    { name: "AES-GCM", iv: iv },
+    key,
+    encrypted
+  );
+  return new TextDecoder().decode(decrypted);
+}
+
+async function getKey() {
+  const keyMaterial = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode("some-unique-password"),
+    { name: "PBKDF2" },
+    false,
+    ["deriveKey"]
+  );
+
+  const key = await crypto.subtle.deriveKey(
+    {
+      name: "PBKDF2",
+      salt: new TextEncoder().encode("some-salt"),
+      iterations: 100000,
+      hash: "SHA-256",
+    },
+    keyMaterial,
+    { name: "AES-GCM", length: 256 },
+    true,
+    ["encrypt", "decrypt"]
+  );
+
+  return key;
+}
+
+//drag files
+
+const importArea = document.querySelector(".importfilecontent");
+
+["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+  importArea.addEventListener(eventName, preventDefaults, false);
+});
+
+["dragenter", "dragover"].forEach((eventName) => {
+  importArea.addEventListener(eventName, () =>
+    importArea.classList.add("dragover")
+  );
+});
+
+["dragleave", "drop"].forEach((eventName) => {
+  importArea.addEventListener(
+    eventName,
+    () => importArea.classList.remove("dragover"),
+    false
+  );
+});
+
+importArea.addEventListener("drop", handleDrop, false);
+
+function preventDefaults(e) {
+  e.preventDefault();
+  e.stopPropagation();
+}
+
+async function handleDrop(e) {
+  const files = e.dataTransfer.files;
+  if ((files.length = 0)) return;
+
+  const file = files[0];
+  const fileName = file.name.toLowerCase();
+
+  if (fileName.endsWith(".nps")) {
+    await importPasswordsFromFile(file);
+  } else if (fileName.endsWith(".npsu")) {
+    await importSinglePasswordFromFile(file);
+  } else {
+    toast("Formato de arquivo não suportado!");
+  }
+}
+
+async function importPasswordsFromFile(file) {
+  const reader = new FileReader();
+  reader.onload = async function (e) {
+    try {
+      const fileContent = JSON.parse(e.target.result);
+      const key = await importKey(fileContent.key);
+      const decryptedData = await decryptData(fileContent.data, key);
+      if (decryptedData.version !== "1.0") {
+        throw new Error("Versão de arquivo não suportada");
+      }
+
+      const passwords =
+        JSON.parse(localStorage.getItem("savedPasswords")) || [];
+      const newPasswords = decryptedData.passwords;
+      const updatedPasswords = passwords.concat(newPasswords);
+      localStorage.setItem("savedPasswords", JSON.stringify(updatedPasswords));
+
+      toast("Senhas importadas com sucesso!");
+      toastSaveChange();
+    } catch (err) {
+      toast(
+        "Falha ao importar senhas: Arquivo Não Suportado ou Desatualizado!"
+      );
+    }
+  };
+  reader.readAsText(file);
+}
+
+async function importSinglePasswordFromFile(file) {
+  const reader = new FileReader();
+  reader.onload = async function (e) {
+    try {
+      const fileContent = JSON.parse(e.target.result);
+      const key = await importKey(fileContent.key);
+      if (fileContent.data.version !== "1.0") {
+        throw new Error("Versão de arquivo não suportada");
+      }
+
+      const savedPasswords =
+        JSON.parse(localStorage.getItem("savedPasswords")) || [];
+      const newPasswordData = {
+        id: generateUniqueId(),
+        password: fileContent.data.password,
+        appName: fileContent.data.appName,
+        dateCreated: new Date().toLocaleString("pt-BR", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        }),
+        useSpecialChars: fileContent.data.useSpecialChars,
+        useRandomNumbers: fileContent.data.useRandomNumbers,
+        useCaseSensitive: fileContent.data.useCaseSensitive,
+        passwordStrength: fileContent.data.passwordStrength,
+      };
+
+      savedPasswords.push(newPasswordData);
+      localStorage.setItem("savedPasswords", JSON.stringify(savedPasswords));
+
+      toast("Senha importada com sucesso!");
+      toastSaveChange();
+    } catch (err) {
+      toast("Falha ao importar senha: Arquivo não suportado ou desatualizado!");
+    }
+  };
+  reader.readAsText(file);
+}
+
+//send email
+async function sendEmailWithPasswords(email, passwords) {
+  const decryptedPasswords = await Promise.all(
+    passwords.map(async (passwordData) => {
+      const decryptedPassword = await decryptPassword(passwordData.password);
+      return { ...passwordData, password: decryptedPassword };
+    })
+  );
+
+  fetch(baseurl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, passwords: decryptedPasswords }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.message === "Email sent successfully.") {
+        toast("Email enviado com sucesso!");
+      } else {
+        toast("Erro ao enviar email.");
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      toast("Erro ao enviar email.");
+    });
+}
+
+const showClearLocal = document.querySelector(".clear-cache");
+const dialogClearCache = document.querySelector(".back-dialog-clear");
+
+showClearLocal.addEventListener("click", () => {
+  dialogClearCache.classList.add("active");
+});
+const btnClearCache = document.querySelector(".confirm-dialog-clear-cache");
+
+const btnCancel = document.querySelector(".close-dialog-clear-cache");
+
+btnCancel.addEventListener("click", () => {
+  dialogClearCache.classList.remove("active");
+});
+
+btnClearCache.addEventListener("click", () => {
+  dialogClearCache.classList.remove("active");
+  localStorage.removeItem("savedPasswords");
+  toast("Suas senhas foram deletadas com sucesso do seu navegador!");
+});
+
+const generatePassBtn = document.querySelector(".generatepassbtn");
+const savePassBtn = document.querySelector(".savepassbtn");
+const output = document.querySelector(".output");
+const textoutput = document.querySelector(".text-output");
+const copyPass = document.querySelector(".bi-clipboard");
+if (localStorage.getItem("password-output")) {
+  textoutput.textContent = `Senha atual gerada: ${localStorage.getItem(
+    "password-output"
+  )}`;
+  output.classList.add("active");
+  copyPass.addEventListener("click", () => {
+    copyPass.classList.add("bi-clipboard-check");
+    copyPass.classList.remove("bi-clipboard");
+    const password = textoutput.textContent;
+    copyToClipboard(password);
+    setTimeout(() => {
+      copyPass.classList.add("bi-clipboard");
+      copyPass.classList.remove("bi-clipboard-check");
+    }, 4000);
+  });
+
+  setTimeout(() => {
+    output.classList.remove("active");
+    textoutput.textContent = "";
+  }, 50000);
+}
+
+generatePassBtn.addEventListener("click", () => {
+  const length = parseInt(document.querySelector("#length-pass").value, 10);
+  if (isNaN(length) || length < 8) {
+    toast(
+      "O número de caracteres deve ser pelo menos 8 para uma melhor segurança!"
+    );
+    loadingDialog.classList.remove("active");
+    return;
+  }
+  if (length > 25) {
+    toast(
+      "Número máximo de caracteres atingido! Use menor do que 25 e maior do que 8!"
+    );
+    loadingDialog.classList.remove("active");
+    return;
+  }
+  generatePassword(false);
+});
+
+savePassBtn.addEventListener("click", () => {
+  const length = parseInt(document.querySelector("#length-pass").value, 10);
+  if (isNaN(length) || length < 8) {
+    toast(
+      "O número de caracteres deve ser pelo menos 8 para uma melhor segurança!"
+    );
+    loadingDialog.classList.remove("active");
+    return;
+  }
+  if (length > 25) {
+    toast(
+      "Número máximo de caracteres atingido! Use menor do que 25 e maior do que 8!"
+    );
+    loadingDialog.classList.remove("active");
+    return;
+  }
+  showDialog("newP");
+});
+
+function showDialog(modeDialog) {
+  const backDialog = document.querySelector(".back-dialog-infor");
+
+  const alertContainer = document.querySelector(".aviso-d");
+  const titleDialog = document.querySelector(".title-dialog");
+  const textDialog = document.querySelector(".aviso");
+  const closeDialog = document.querySelector(".close-dialog");
+
+  const newPassContainer = document.querySelector(".new-d");
+  const nameApp = document.querySelector("#name-app");
+  const nextDialog = document.querySelector(".next-dialog");
+  const closedialogcreatepass = document.querySelector(
+    ".close-dialog-create-pass"
+  );
+
+  backDialog.classList.add("active");
+  closedialogcreatepass.addEventListener("click", () => {
+    backDialog.classList.remove("active");
+  });
+
+  if (modeDialog === "alert") {
+    alertContainer.classList.add("active");
+    titleDialog.textContent = "Aviso";
+    textDialog.textContent =
+      "Para garantir a segurança de suas senhas, armazenamos seus dados criptografados localmente no navegador. Embora não sejam enviados a servidores, é essencial manter seu dispositivo seguro e realizar backups periódicos, pois a limpeza do cache ou a desinstalação do navegador podem resultar na perda de suas informações. Nosso site assegura a proteção de suas informações pessoais, mas não nos responsabilizamos por infecções de vírus no seu dispositivo ou pela exclusão de dados devido à limpeza do cache ou desinstalação do navegador. Agradecemos por utilizar nosso site. Aproveite e guarde suas senhas de forma segura, evitando compartilhá-las.";
+
+    closeDialog.removeEventListener("click", handleCloseDialogClick);
+    closeDialog.addEventListener("click", handleCloseDialogClick);
+  } else if (modeDialog === "newP") {
+    newPassContainer.classList.add("active");
+
+    nextDialog.removeEventListener("click", handleNextDialogClick);
+    nextDialog.addEventListener("click", handleNextDialogClick);
+  }
+}
+
+function handleCloseDialogClick() {
+  generatePassword();
+  const backDialog = document.querySelector(".back-dialog-infor");
+  const alertContainer = document.querySelector(".aviso-d");
+  backDialog.classList.remove("active");
+  alertContainer.classList.remove("active");
+}
+
+function handleNextDialogClick() {
+  const newPassContainer = document.querySelector(".new-d");
+  const alertContainer = document.querySelector(".aviso-d");
+  const titleDialog = document.querySelector(".title-dialog");
+  const textDialog = document.querySelector(".aviso");
+  const closeDialog = document.querySelector(".close-dialog");
+  const nameApp = document.querySelector("#name-app");
+
+  newPassContainer.classList.remove("active");
+  alertContainer.classList.add("active");
+  titleDialog.textContent = "Aviso";
+  textDialog.textContent =
+    "Para garantir a segurança de suas senhas, armazenamos seus dados criptografados localmente no navegador. Embora não sejam enviados a servidores, é essencial manter seu dispositivo seguro e realizar backups periódicos, pois a limpeza do cache ou a desinstalação do navegador podem resultar na perda de suas informações. Nosso site assegura a proteção de suas informações pessoais, mas não nos responsabilizamos por infecções de vírus no seu dispositivo ou pela exclusão de dados devido à limpeza do cache ou desinstalação do navegador. Agradecemos por utilizar nosso site. Aproveite e guarde suas senhas de forma segura, evitando compartilhá-las.";
+
+  closeDialog.removeEventListener("click", handleCloseDialogNewPassword);
+  closeDialog.addEventListener(
+    "click",
+    handleCloseDialogNewPassword.bind(null, nameApp.value || "[App Sem Nome]")
+  );
+}
+
+function handleCloseDialogNewPassword(appName) {
+  generatePassword(true, appName);
+  const backDialog = document.querySelector(".back-dialog-infor");
+  const alertContainer = document.querySelector(".aviso-d");
+  backDialog.classList.remove("active");
+  alertContainer.classList.remove("active");
+}
+
+const settingsAdvancedBtn = document.querySelector(".settings-advanced");
+const settingsNormalBtn = document.querySelector(".settings-normal");
+const advancedContent = document.querySelector(".advanced-content");
+
+const useSpecialCharsSwicth = document.querySelector("#chk1");
+const useRandomNumbersSwitch = document.querySelector("#chk2");
+const useCaseSensitiveSwitch = document.querySelector("#chk3");
+
+settingsAdvancedBtn.addEventListener("click", () => {
+  advancedContent.classList.add("active");
+  settingsAdvancedBtn.classList.add("active");
+  settingsNormalBtn.classList.remove("active");
+});
+settingsNormalBtn.addEventListener("click", () => {
+  useCaseSensitiveSwitch.checked = false;
+  useRandomNumbersSwitch.checked = false;
+  useSpecialCharsSwicth.checked = false;
+  advancedContent.classList.remove("active");
+  settingsAdvancedBtn.classList.remove("active");
+  settingsNormalBtn.classList.add("active");
+});
+
+function generatePassword(save = false, appName = "Aplicativo Desconhecido") {
+  const nameUser = document.querySelector("#name-user").value || "";
+  const length = parseInt(document.querySelector("#length-pass").value, 10);
+
+  const loadingDialog = document.querySelector(".loading-back");
+  const loadingText = document.querySelector(".loading-text");
+  const progressBar = document.querySelector(".progress");
+
+  loadingDialog.classList.add("active");
+
+  function updateProgress(step, message, callback) {
+    const totalStep = 5;
+    const progress = (step / totalStep) * 100;
+    progressBar.style.width = progress + "%";
+    loadingText.textContent = message;
+    setTimeout(callback, 1000);
+  }
+
+  updateProgress(1, "Validando o número de caracteres..."),
+    () => {
+      if (isNaN(length) || length < 8) {
+        toast(
+          "O número de caracteres deve ser pelo menos 8 para uma melhor segurança!"
+        );
+        loadingDialog.classList.remove("active");
+        return;
+      }
+      if (length > 25) {
+        toast(
+          "Número máximo de caracteres atingido! Use menor do que 25 e maior do que 8!"
+        );
+        loadingDialog.classList.remove("active");
+        return;
+      }
+    };
+
+  updateProgress(2, "Analisando escolhas de caracteres", () => {
+    const partOfName = nameUser.slice(0, 3);
+    let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    let useSpecialChars;
+    let useCaseSensitive;
+    let useRandomNumbers;
+
+    if (useSpecialCharsSwicth.checked) {
+      characters += "!@#$%^&*()_+{}:\"<>?|[];',./`~";
+      useSpecialChars = true;
+    } else {
+      useSpecialChars = false;
+    }
+
+    if (useRandomNumbersSwitch.checked) {
+      characters += "0123456789";
+      useRandomNumbers = true;
+    } else {
+      useRandomNumbers = false;
+    }
+
+    if (!useCaseSensitiveSwitch.checked) {
+      characters = characters.toLowerCase();
+      useCaseSensitive = false;
+    } else {
+      useCaseSensitive = true;
+    }
+
+    updateProgress(3, "Gerando sua senha do seu jeito :)", () => {
+      let randomChars = "";
+      for (let i = 0; i < length; i++) {
+        randomChars += characters.charAt(
+          Math.floor(Math.random() * characters.length)
+        );
+      }
+      const password = partOfName + randomChars;
+      localStorage.setItem("password-output", password);
+      output.classList.add("active");
+      textoutput.textContent = `Sua senha gerada: ${password}`;
+
+      copyPass.addEventListener("click", () => {
+        copyPass.classList.add("bi-clipboard-check");
+        copyPass.classList.remove("bi-clipboard");
+        copyToClipboard(password);
+        setTimeout(() => {
+          copyPass.classList.add("bi-clipboard");
+          copyPass.classList.remove("bi-clipboard-check");
+        }, 4000);
+      });
+
+      setTimeout(() => {
+        output.classList.remove("active");
+        textoutput.textContent = "";
+      }, 50000);
+
+      updateProgress(4, "Calculando a segurança da senha...", () => {
+        const strength = calculatePasswordStrength(
+          password,
+          useSpecialChars,
+          useRandomNumbers,
+          useCaseSensitive
+        );
+        if (!save) {
+          toast(`Senha Gerada: ${password} (Segurança: ${strength})`);
+          setTimeout(() => {
+            loadingDialog.classList.remove("active");
+          }, 2000);
+        } else {
+          toast("Erro ao gerar senha");
+          loadingDialog.classList.remove("active");
+        }
+        if (save) {
+          updateProgress(5, "Salvando sua senha...");
+          const passwordData = {
+            id: generateUniqueId(),
+            password,
+            appName,
+            dateCreated: new Date().toLocaleString("pt-BR", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+            }),
+            useSpecialChars,
+            useRandomNumbers,
+            useCaseSensitive,
+            passwordStrength: strength,
+          };
+
+          hashPassword(password).then((hash) => {
+            passwordData.hash = hash;
+            savePasswordData(passwordData);
+            toast(
+              `Senha salva no seu navegador! Segurança da senha: ${strength}`
+            );
+            loadingDialog.classList.remove("active");
+            toastSaveChange();
+          });
+        } else {
+          loadingDialog.classList.remove("active");
+        }
+      });
+    });
+  });
+}
+
+async function hashPassword(password) {
+  const msgBuffer = new TextEncoder().encode(password);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+  return hashHex;
+}
+
+async function savePasswordData(passwordData) {
+  const savedPasswords =
+    JSON.parse(localStorage.getItem("savedPasswords")) || [];
+  const encryptedPassword = await encryptPassword(passwordData.password);
+  passwordData.password = encryptedPassword;
+  savedPasswords.push(passwordData);
+  localStorage.setItem("savedPasswords", JSON.stringify(savedPasswords));
+}
+
+function copyToClipboard(text) {
+  if (navigator.clipboard) {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        toast("Senha copiada com sucesso!");
+      })
+      .catch((err) => {
+        console.error("Erro ao copiar a senha: ", err);
+        toast("Erro ao copiar a senha");
+      });
+  } else {
+    const hiddenInput = document.querySelector("#hidden-password-input");
+    hiddenInput.value = text;
+    hiddenInput.select();
+    document.execCommand("copy");
+    hiddenInput.blur();
+    toast("Senha copiada com sucesso!");
+  }
+}
+
+function generateUniqueId() {
+  return "id-" + new Date().getTime() + "-" + Math.floor(Math.random() * 10000);
+}
+
+showAllPasswords();
